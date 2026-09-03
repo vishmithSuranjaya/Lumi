@@ -35,8 +35,10 @@ export async function POST(request: Request) {
         const db = client.db("myfirstapp");
         const collection = db.collection("advertisements");
 
-        // 3. Generate unique reference ID
-        const refId = `LUMI-${Math.floor(100000 + Math.random() * 900000)}`;
+        // 3. Generate collision-resistant timestamp-based reference ID (e.g. LUMI-KM9X2A-8F4B)
+        const timestampPart = Date.now().toString(36).toUpperCase();
+        const randomSalt = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const refId = `LUMI-${timestampPart}-${randomSalt}`;
 
         const documentToInsert = {
             ...validation.sanitized,

@@ -130,7 +130,7 @@ export default function AboutUsPage() {
                                 </span>
                             </div>
                             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-neutral-900 tracking-tight leading-tight">
-                                Committed to Delivering Uncompromising Quality & Bespoke Automotive Care.
+                                Committed to Delivering Uncompromising Quality & Improve Automotive Care.
                             </h2>
                             <p className="mt-5 text-sm sm:text-base text-neutral-600 leading-relaxed">
                                 At AURRA Automotive, we believe purchasing a vehicle is not merely a transaction—it is an investment in lifestyle, performance, and prestige. We curate only the highest-grade verified luxury sedans, sports supercars, rugged SUVs, commercial fleets, and heavy machinery for Sri Lankan motorists and enterprises.
