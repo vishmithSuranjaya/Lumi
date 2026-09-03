@@ -53,7 +53,21 @@ async function getVehicles(): Promise<VehicleAd[]> {
 export default async function VehiclesPage({
     searchParams,
 }: {
-    searchParams?: Promise<{ category?: string }>;
+    searchParams?: Promise<{
+        category?: string;
+        brand?: string;
+        model?: string;
+        district?: string;
+        condition?: string;
+        fuelType?: string;
+        transmission?: string;
+        minPrice?: string;
+        maxPrice?: string;
+        minYear?: string;
+        maxYear?: string;
+        q?: string;
+        sort?: string;
+    }>;
 }) {
     const params = searchParams ? await searchParams : {};
     const vehicles = await getVehicles();
@@ -98,7 +112,11 @@ export default async function VehiclesPage({
 
                 {/* Catalog Section with Interactive Client Component */}
                 <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-                    <VehicleCatalog initialVehicles={vehicles} initialCategory={params?.category} />
+                    <VehicleCatalog
+                        initialVehicles={vehicles}
+                        initialCategory={params?.category}
+                        initialParams={params}
+                    />
 
                     {/* Assistance Banner */}
                     <div className="mt-16 bg-[#121418] text-white p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-6 border-l-4 border-[#C8102E]">

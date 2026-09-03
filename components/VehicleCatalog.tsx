@@ -2,7 +2,11 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { VEHICLE_CATEGORIES } from "@/lib/validations/advertisement";
+import {
+    VEHICLE_CATEGORIES,
+    SRI_LANKA_DISTRICTS,
+    VEHICLE_CONDITIONS,
+} from "@/lib/validations/advertisement";
 
 export interface VehicleAd {
     _id: string;
@@ -29,19 +33,62 @@ export interface VehicleAd {
     createdAt: string;
 }
 
-interface VehicleCatalogProps {
+export interface VehicleCatalogProps {
     initialVehicles: VehicleAd[];
     initialCategory?: string;
+    initialParams?: {
+        category?: string;
+        brand?: string;
+        model?: string;
+        district?: string;
+        condition?: string;
+        fuelType?: string;
+        transmission?: string;
+        minPrice?: string;
+        maxPrice?: string;
+        minYear?: string;
+        maxYear?: string;
+        q?: string;
+        sort?: string;
+    };
 }
 
-export default function VehicleCatalog({ initialVehicles, initialCategory }: VehicleCatalogProps) {
+export default function VehicleCatalog({
+    initialVehicles,
+    initialCategory,
+    initialParams,
+}: VehicleCatalogProps) {
+    const defaultCategory = initialParams?.category || initialCategory;
     const [selectedCategory, setSelectedCategory] = useState(
-        initialCategory && VEHICLE_CATEGORIES.includes(initialCategory as any)
-            ? initialCategory
+        defaultCategory && VEHICLE_CATEGORIES.includes(defaultCategory as any)
+            ? defaultCategory
             : "All Vehicles"
     );
-    const [searchTerm, setSearchTerm] = useState("");
-    const [sortBy, setSortBy] = useState("newest");
+    const [selectedBrand, setSelectedBrand] = useState(initialParams?.brand || "");
+    const [selectedModel, setSelectedModel] = useState(initialParams?.model || "");
+    const [selectedDistrict, setSelectedDistrict] = useState(initialParams?.district || "All Districts");
+    const [selectedCondition, setSelectedCondition] = useState(initialParams?.condition || "All Conditions");
+    const [priceRange, setPriceRange] = useState({
+        min: Number(initialParams?.minPrice) || 0,
+        max: Number(initialParams?.maxPrice) || 100000000,
+    });
+    const [yearRange, setYearRange] = useState({
+        min: Number(initialParams?.minYear) || 1990,
+        max: Number(initialParams?.maxYear) || new Date().getFullYear() + 1,
+    });
+    const [searchTerm, setSearchTerm] = useState(initialParams?.q || "");
+    const [sortBy, setSortBy] = useState(initialParams?.sort || "newest");
+    const [showFiltersPanel, setShowFiltersPanel] = useState(
+        Boolean(
+            initialParams?.brand ||
+            initialParams?.model ||
+            initialParams?.district ||
+            initialParams?.condition ||
+            initialParams?.minPrice ||
+            (initialParams?.maxPrice && Number(initialParams.maxPrice) < 100000000) ||
+            initialParams?.minYear
+        )
+    );
 
     const categories = useMemo(() => ["All Vehicles", ...VEHICLE_CATEGORIES], []);
 
@@ -49,9 +96,40 @@ export default function VehicleCatalog({ initialVehicles, initialCategory }: Veh
     const filteredVehicles = useMemo(() => {
         return initialVehicles
             .filter((vehicle) => {
+                // Category match
                 const matchesCategory =
                     selectedCategory === "All Vehicles" || vehicle.category === selectedCategory;
 
+                // Brand match
+                const matchesBrand =
+                    !selectedBrand.trim() ||
+                    vehicle.brand.toLowerCase().includes(selectedBrand.trim().toLowerCase());
+
+                // Model match
+                const matchesModel =
+                    !selectedModel.trim() ||
+                    vehicle.model.toLowerCase().includes(selectedModel.trim().toLowerCase());
+
+                // District match
+                const matchesDistrict =
+                    selectedDistrict === "All Districts" ||
+                    vehicle.district.toLowerCase() === selectedDistrict.toLowerCase();
+
+                // Condition match
+                const matchesCondition =
+                    selectedCondition === "All Conditions" ||
+                    vehicle.condition.toLowerCase().includes(selectedCondition.toLowerCase());
+
+                // Price match
+                const matchesPrice =
+                    vehicle.priceLKR >= priceRange.min &&
+                    (priceRange.max >= 100000000 ? true : vehicle.priceLKR <= priceRange.max);
+
+                // Year match
+                const matchesYear =
+                    vehicle.year >= yearRange.min && vehicle.year <= yearRange.max;
+
+                // Search query match across multiple fields
                 const searchLower = searchTerm.trim().toLowerCase();
                 const matchesSearch =
                     !searchLower ||
@@ -61,7 +139,16 @@ export default function VehicleCatalog({ initialVehicles, initialCategory }: Veh
                     vehicle.city.toLowerCase().includes(searchLower) ||
                     vehicle.refId.toLowerCase().includes(searchLower);
 
-                return matchesCategory && matchesSearch;
+                return (
+                    matchesCategory &&
+                    matchesBrand &&
+                    matchesModel &&
+                    matchesDistrict &&
+                    matchesCondition &&
+                    matchesPrice &&
+                    matchesYear &&
+                    matchesSearch
+                );
             })
             .sort((a, b) => {
                 if (sortBy === "price-asc") return a.priceLKR - b.priceLKR;
@@ -70,7 +157,52 @@ export default function VehicleCatalog({ initialVehicles, initialCategory }: Veh
                 // Default: newest first
                 return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
             });
-    }, [initialVehicles, selectedCategory, searchTerm, sortBy]);
+    }, [
+        initialVehicles,
+        selectedCategory,
+        selectedBrand,
+        selectedModel,
+        selectedDistrict,
+        selectedCondition,
+        priceRange,
+        yearRange,
+        searchTerm,
+        sortBy,
+    ]);
+
+    const activeFiltersCount = useMemo(() => {
+        let count = 0;
+        if (selectedCategory !== "All Vehicles") count++;
+        if (selectedBrand.trim()) count++;
+        if (selectedModel.trim()) count++;
+        if (selectedDistrict !== "All Districts") count++;
+        if (selectedCondition !== "All Conditions") count++;
+        if (priceRange.min > 0 || priceRange.max < 100000000) count++;
+        if (yearRange.min > 1990 || yearRange.max < new Date().getFullYear() + 1) count++;
+        if (searchTerm.trim()) count++;
+        return count;
+    }, [
+        selectedCategory,
+        selectedBrand,
+        selectedModel,
+        selectedDistrict,
+        selectedCondition,
+        priceRange,
+        yearRange,
+        searchTerm,
+    ]);
+
+    const resetAllFilters = () => {
+        setSelectedCategory("All Vehicles");
+        setSelectedBrand("");
+        setSelectedModel("");
+        setSelectedDistrict("All Districts");
+        setSelectedCondition("All Conditions");
+        setPriceRange({ min: 0, max: 100000000 });
+        setYearRange({ min: 1990, max: new Date().getFullYear() + 1 });
+        setSearchTerm("");
+        setSortBy("newest");
+    };
 
     // Format phone for WhatsApp link (e.g. 0771234567 -> 94771234567)
     const getWhatsAppUrl = (phone: string, refId: string, vehicleTitle: string) => {
@@ -123,19 +255,40 @@ export default function VehicleCatalog({ initialVehicles, initialCategory }: Veh
                         )}
                     </div>
 
-                    {/* Sort Dropdown */}
-                    <div className="flex items-center gap-2 self-end md:self-auto">
-                        <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">Sort:</span>
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="bg-[#1c212a] border border-neutral-700 text-xs font-semibold px-3 py-2.5 text-white focus:outline-none focus:border-[#0F52BA] cursor-pointer"
+                    {/* Filter Toggle & Sort Dropdown */}
+                    <div className="flex items-center gap-3 self-end md:self-auto flex-wrap">
+                        <button
+                            type="button"
+                            onClick={() => setShowFiltersPanel(!showFiltersPanel)}
+                            className={`flex items-center gap-2 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all border cursor-pointer ${showFiltersPanel || activeFiltersCount > 0
+                                ? "bg-[#0F52BA] text-white border-[#0F52BA]"
+                                : "bg-[#1c212a] text-neutral-300 border-neutral-700 hover:bg-neutral-800"
+                                }`}
                         >
-                            <option value="newest">Newest First</option>
-                            <option value="price-asc">Price: Low to High</option>
-                            <option value="price-desc">Price: High to Low</option>
-                            <option value="year-desc">Year: Newest First</option>
-                        </select>
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+                            </svg>
+                            <span>Price & Filters</span>
+                            {activeFiltersCount > 0 && (
+                                <span className="w-5 h-5 rounded-full bg-white text-[#0F52BA] text-[10px] font-black flex items-center justify-center">
+                                    {activeFiltersCount}
+                                </span>
+                            )}
+                        </button>
+
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">Sort:</span>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="bg-[#1c212a] border border-neutral-700 text-xs font-semibold px-3 py-2.5 text-white focus:outline-none focus:border-[#0F52BA] cursor-pointer"
+                            >
+                                <option value="newest">Newest First</option>
+                                <option value="price-asc">Price: Low to High</option>
+                                <option value="price-desc">Price: High to Low</option>
+                                <option value="year-desc">Year: Newest First</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -155,6 +308,193 @@ export default function VehicleCatalog({ initialVehicles, initialCategory }: Veh
                         </button>
                     ))}
                 </div>
+
+                {/* Expandable Advanced Filter Panel (Price, Brand, District, Condition, Year) */}
+                {showFiltersPanel && (
+                    <div className="mt-6 pt-6 border-t border-neutral-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in duration-200">
+                        {/* Price Range Slider */}
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <label className="text-xs font-bold uppercase tracking-wider text-neutral-300">
+                                    Max Price (LKR)
+                                </label>
+                                <span className="text-xs font-bold text-[#87CEEB]">
+                                    {priceRange.max >= 100000000
+                                        ? "Any Price"
+                                        : `Up to LKR ${(priceRange.max / 1000000).toFixed(1)}M`}
+                                </span>
+                            </div>
+                            <input
+                                type="range"
+                                min="500000"
+                                max="100000000"
+                                step="500000"
+                                value={priceRange.max}
+                                onChange={(e) =>
+                                    setPriceRange((prev) => ({ ...prev, max: Number(e.target.value) }))
+                                }
+                                className="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-[#0F52BA]"
+                            />
+                            <div className="flex justify-between text-[11px] text-neutral-400 font-mono">
+                                <span>LKR 500K</span>
+                                <span>LKR 100M+</span>
+                            </div>
+                        </div>
+
+                        {/* Brand Filter */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold uppercase tracking-wider text-neutral-300">
+                                Brand / Make
+                            </label>
+                            <input
+                                type="text"
+                                value={selectedBrand}
+                                onChange={(e) => setSelectedBrand(e.target.value)}
+                                placeholder="e.g. Toyota, Honda, Suzuki"
+                                className="w-full bg-[#1c212a] border border-neutral-700 px-3 py-2 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#0F52BA]"
+                            />
+                        </div>
+
+                        {/* District Filter */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold uppercase tracking-wider text-neutral-300">
+                                District
+                            </label>
+                            <select
+                                value={selectedDistrict}
+                                onChange={(e) => setSelectedDistrict(e.target.value)}
+                                className="w-full bg-[#1c212a] border border-neutral-700 px-3 py-2 text-xs text-white focus:outline-none focus:border-[#0F52BA] cursor-pointer"
+                            >
+                                <option value="All Districts">All Districts (Sri Lanka)</option>
+                                {SRI_LANKA_DISTRICTS.map((d) => (
+                                    <option key={d} value={d}>
+                                        {d}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Condition Filter */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold uppercase tracking-wider text-neutral-300">
+                                Condition
+                            </label>
+                            <select
+                                value={selectedCondition}
+                                onChange={(e) => setSelectedCondition(e.target.value)}
+                                className="w-full bg-[#1c212a] border border-neutral-700 px-3 py-2 text-xs text-white focus:outline-none focus:border-[#0F52BA] cursor-pointer"
+                            >
+                                <option value="All Conditions">All Conditions</option>
+                                {VEHICLE_CONDITIONS.map((c) => (
+                                    <option key={c} value={c}>
+                                        {c}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                )}
+
+                {/* Active Filter Badges */}
+                {activeFiltersCount > 0 && (
+                    <div className="mt-4 pt-4 border-t border-neutral-800/80 flex items-center gap-2 flex-wrap text-xs">
+                        <span className="text-neutral-400 font-semibold uppercase tracking-wider text-[10px]">
+                            Active Filters:
+                        </span>
+
+                        {selectedCategory !== "All Vehicles" && (
+                            <span className="inline-flex items-center gap-1.5 bg-neutral-800 px-2.5 py-1 text-white border border-neutral-700">
+                                {selectedCategory}
+                                <button
+                                    onClick={() => setSelectedCategory("All Vehicles")}
+                                    className="hover:text-red-400 font-bold ml-1 cursor-pointer"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        )}
+
+                        {selectedBrand.trim() && (
+                            <span className="inline-flex items-center gap-1.5 bg-neutral-800 px-2.5 py-1 text-white border border-neutral-700">
+                                Make: {selectedBrand}
+                                <button
+                                    onClick={() => setSelectedBrand("")}
+                                    className="hover:text-red-400 font-bold ml-1 cursor-pointer"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        )}
+
+                        {selectedModel.trim() && (
+                            <span className="inline-flex items-center gap-1.5 bg-neutral-800 px-2.5 py-1 text-white border border-neutral-700">
+                                Model: {selectedModel}
+                                <button
+                                    onClick={() => setSelectedModel("")}
+                                    className="hover:text-red-400 font-bold ml-1 cursor-pointer"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        )}
+
+                        {selectedDistrict !== "All Districts" && (
+                            <span className="inline-flex items-center gap-1.5 bg-neutral-800 px-2.5 py-1 text-white border border-neutral-700">
+                                {selectedDistrict}
+                                <button
+                                    onClick={() => setSelectedDistrict("All Districts")}
+                                    className="hover:text-red-400 font-bold ml-1 cursor-pointer"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        )}
+
+                        {selectedCondition !== "All Conditions" && (
+                            <span className="inline-flex items-center gap-1.5 bg-neutral-800 px-2.5 py-1 text-white border border-neutral-700">
+                                {selectedCondition}
+                                <button
+                                    onClick={() => setSelectedCondition("All Conditions")}
+                                    className="hover:text-red-400 font-bold ml-1 cursor-pointer"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        )}
+
+                        {priceRange.max < 100000000 && (
+                            <span className="inline-flex items-center gap-1.5 bg-neutral-800 px-2.5 py-1 text-white border border-neutral-700">
+                                Up to LKR {(priceRange.max / 1000000).toFixed(1)}M
+                                <button
+                                    onClick={() => setPriceRange((p) => ({ ...p, max: 100000000 }))}
+                                    className="hover:text-red-400 font-bold ml-1 cursor-pointer"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        )}
+
+                        {searchTerm.trim() && (
+                            <span className="inline-flex items-center gap-1.5 bg-neutral-800 px-2.5 py-1 text-white border border-neutral-700">
+                                Search: {searchTerm}
+                                <button
+                                    onClick={() => setSearchTerm("")}
+                                    className="hover:text-red-400 font-bold ml-1 cursor-pointer"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        )}
+
+                        <button
+                            type="button"
+                            onClick={resetAllFilters}
+                            className="text-[#C8102E] hover:underline font-bold uppercase text-[10px] tracking-wider ml-auto cursor-pointer"
+                        >
+                            Reset All
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Results Counter Header */}

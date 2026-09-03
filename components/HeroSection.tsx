@@ -3,75 +3,87 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+    VEHICLE_CATEGORIES,
+    SRI_LANKA_DISTRICTS,
+    VEHICLE_CONDITIONS,
+} from "@/lib/validations/advertisement";
 
-const carMakes = [
-    { id: "all", name: "All Makes", count: 142 },
-    { id: "audi", name: "Audi", count: 28 },
-    { id: "bmw", name: "BMW", count: 34, selected: true },
-    { id: "geely", name: "Geely", count: 12 },
-    { id: "genesis", name: "Genesis", count: 8, selected: true },
-    { id: "honda", name: "Honda", count: 19 },
-    { id: "hyundai", name: "Hyundai", count: 23 },
-    { id: "infiniti", name: "Infiniti", count: 7 },
-    { id: "mercedes", name: "Mercedes-Benz", count: 41 },
-    { id: "porsche", name: "Porsche", count: 15 },
-];
-
-const carModels = [
-    {
-        group: "BMW Models",
-        items: [
-            { id: "bmw-1", name: "1 Series", selected: true },
-            { id: "bmw-3", name: "3 Series", selected: false },
-            { id: "bmw-4", name: "4 Series", selected: false },
-            { id: "bmw-5gt", name: "5 Series GT", selected: false },
-            { id: "bmw-m4", name: "M4 Competition", selected: false },
-        ],
-    },
-    {
-        group: "Genesis Models",
-        items: [
-            { id: "gen-g70", name: "G70 Sport", selected: true },
-            { id: "gen-g80", name: "G80", selected: false },
-            { id: "gen-gv70", name: "GV70", selected: false },
-            { id: "gen-gv80", name: "GV80", selected: false },
-        ],
-    },
+const popularBrands = [
+    "Toyota",
+    "Suzuki",
+    "Honda",
+    "Nissan",
+    "Mitsubishi",
+    "BMW",
+    "Mercedes-Benz",
+    "Hyundai",
+    "Kia",
+    "Bajaj",
+    "Isuzu",
+    "Land Rover",
 ];
 
 export default function HeroSection() {
-    // State for interactive UI sliders & controls
-    const [selectedMakes, setSelectedMakes] = useState<string[]>(["bmw", "genesis"]);
-    const [selectedModels, setSelectedModels] = useState<string[]>(["bmw-1", "gen-g70"]);
-    const [yearRange, setYearRange] = useState({ min: 1991, max: 2024 });
-    const [priceRange, setPriceRange] = useState({ min: 1000, max: 90000 });
-    const [mileageRange, setMileageRange] = useState({ min: 1900, max: 360000 });
-    const [engineVolume, setEngineVolume] = useState({ min: 1.0, max: 5.5 });
-    const [seats, setSeats] = useState("All");
-    const [powerRange, setPowerRange] = useState({ min: 100, max: 800 });
-    const [sortBy, setSortBy] = useState("Recommended");
+    const router = useRouter();
 
-    const toggleMake = (id: string) => {
-        setSelectedMakes((prev) =>
-            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-        );
-    };
-
-    const toggleModel = (id: string) => {
-        setSelectedModels((prev) =>
-            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-        );
-    };
+    // State for interactive search filters
+    const [selectedCategory, setSelectedCategory] = useState("All Categories");
+    const [selectedBrand, setSelectedBrand] = useState("");
+    const [selectedModel, setSelectedModel] = useState("");
+    const [selectedDistrict, setSelectedDistrict] = useState("All Districts");
+    const [selectedCondition, setSelectedCondition] = useState("All Conditions");
+    const [yearRange, setYearRange] = useState({
+        min: 2000,
+        max: new Date().getFullYear() + 1,
+    });
+    // Keep the price filter still (in LKR)
+    const [priceRange, setPriceRange] = useState({ min: 500000, max: 100000000 });
 
     const clearFilters = () => {
-        setSelectedMakes([]);
-        setSelectedModels([]);
-        setYearRange({ min: 1991, max: 2024 });
-        setPriceRange({ min: 1000, max: 90000 });
-        setMileageRange({ min: 1900, max: 360000 });
-        setEngineVolume({ min: 1.0, max: 5.5 });
-        setSeats("All");
-        setPowerRange({ min: 100, max: 800 });
+        setSelectedCategory("All Categories");
+        setSelectedBrand("");
+        setSelectedModel("");
+        setSelectedDistrict("All Districts");
+        setSelectedCondition("All Conditions");
+        setYearRange({ min: 2000, max: new Date().getFullYear() + 1 });
+        setPriceRange({ min: 500000, max: 100000000 });
+    };
+
+    const handleSearch = () => {
+        const params = new URLSearchParams();
+
+        if (selectedCategory && selectedCategory !== "All Categories") {
+            params.set("category", selectedCategory);
+        }
+        if (selectedBrand.trim()) {
+            params.set("brand", selectedBrand.trim());
+        }
+        if (selectedModel.trim()) {
+            params.set("model", selectedModel.trim());
+        }
+        if (selectedDistrict && selectedDistrict !== "All Districts") {
+            params.set("district", selectedDistrict);
+        }
+        if (selectedCondition && selectedCondition !== "All Conditions") {
+            params.set("condition", selectedCondition);
+        }
+        if (priceRange.max < 100000000) {
+            params.set("maxPrice", priceRange.max.toString());
+        }
+        if (priceRange.min > 500000) {
+            params.set("minPrice", priceRange.min.toString());
+        }
+        if (yearRange.min > 2000) {
+            params.set("minYear", yearRange.min.toString());
+        }
+        if (yearRange.max < new Date().getFullYear() + 1) {
+            params.set("maxYear", yearRange.max.toString());
+        }
+
+        const queryString = params.toString();
+        router.push(`/vehicles${queryString ? `?${queryString}` : ""}`);
     };
 
     return (
@@ -162,7 +174,7 @@ export default function HeroSection() {
             </div>
 
             {/* Searching Criteria / Filter Box */}
-            <div className="hidden md:block relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-44 sm:-mt-52 md:-mt-60 z-20">
+            <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 sm:-mt-36 md:-mt-52 z-20">
                 <div className="bg-white rounded-none shadow-2xl border border-neutral-200/80 overflow-hidden">
                     {/* Red Header Banner */}
                     <div className="bg-[#C8102E] bg-gradient-to-r from-[#B00D26] via-[#C8102E] to-[#D91E3B] px-6 sm:px-8 py-4 sm:py-5 text-white flex flex-wrap items-center justify-between gap-4">
@@ -186,130 +198,135 @@ export default function HeroSection() {
 
                     {/* Filter Controls Grid */}
                     <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 bg-white">
-                        {/* Col 1: Car Make List (3 cols) */}
-                        <div className="lg:col-span-3 flex flex-col">
-                            <label className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2">
-                                Vehicle Make
-                            </label>
-                            <div className="border border-neutral-200 rounded-sm bg-neutral-50/50 h-56 overflow-y-auto divide-y divide-neutral-100 text-sm">
-                                {carMakes.map((make) => {
-                                    const isSelected = selectedMakes.includes(make.id);
-                                    return (
-                                        <button
-                                            key={make.id}
-                                            type="button"
-                                            onClick={() => toggleMake(make.id)}
-                                            className={`w-full flex items-center justify-between px-3 py-2 text-left hover:bg-neutral-100/80 transition-colors cursor-pointer ${
-                                                isSelected ? "bg-red-50/60 font-semibold text-neutral-900" : "text-neutral-600"
-                                            }`}
-                                        >
-                                            <div className="flex items-center gap-2.5">
-                                                <span
-                                                    className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-colors ${
-                                                        isSelected
-                                                            ? "border-[#C8102E] bg-white"
-                                                            : "border-neutral-300 bg-white"
-                                                    }`}
-                                                >
-                                                    {isSelected && <span className="w-2 h-2 rounded-full bg-[#C8102E]" />}
-                                                </span>
-                                                <span className={isSelected ? "text-[#C8102E]" : "text-neutral-700"}>
-                                                    {make.name}
-                                                </span>
-                                            </div>
-                                            <span className="text-[11px] text-neutral-400">({make.count})</span>
-                                        </button>
-                                    );
-                                })}
+                        {/* Col 1: Category & Make (4 cols) */}
+                        <div className="lg:col-span-4 flex flex-col gap-4">
+                            <div>
+                                <label className="text-xs font-bold text-neutral-800 uppercase tracking-wider block mb-1.5">
+                                    Vehicle Category
+                                </label>
+                                <select
+                                    value={selectedCategory}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    className="w-full py-2.5 px-3 border border-neutral-300 rounded-none bg-white text-sm text-neutral-800 focus:outline-none focus:border-[#C8102E] cursor-pointer"
+                                >
+                                    <option value="All Categories">All Categories</option>
+                                    {VEHICLE_CATEGORIES.map((cat) => (
+                                        <option key={cat} value={cat}>
+                                            {cat}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-                        </div>
 
-                        {/* Col 2: Car Model List (3 cols) */}
-                        <div className="lg:col-span-3 flex flex-col">
-                            <label className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2">
-                                Model Series
-                            </label>
-                            <div className="border border-neutral-200 rounded-sm bg-neutral-50/50 h-56 overflow-y-auto text-sm p-1 divide-y divide-neutral-100">
-                                {carModels.map((group) => (
-                                    <div key={group.group} className="py-1">
-                                        <span className="block px-2 py-1 text-[11px] font-bold text-neutral-500 tracking-wide bg-neutral-100/70 uppercase">
-                                            {group.group}
-                                        </span>
-                                        {group.items.map((model) => {
-                                            const isSelected = selectedModels.includes(model.id);
-                                            return (
-                                                <button
-                                                    key={model.id}
-                                                    type="button"
-                                                    onClick={() => toggleModel(model.id)}
-                                                    className={`w-full flex items-center justify-between px-3 py-1.5 text-left hover:bg-neutral-100/80 transition-colors cursor-pointer rounded-xs ${
-                                                        isSelected ? "bg-red-50/60 font-semibold text-neutral-900" : "text-neutral-600"
-                                                    }`}
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        <span
-                                                            className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-colors ${
-                                                                isSelected
-                                                                    ? "border-[#C8102E] bg-white"
-                                                                    : "border-neutral-300 bg-white"
-                                                            }`}
-                                                        >
-                                                            {isSelected && (
-                                                                <span className="w-2 h-2 rounded-full bg-[#C8102E]" />
-                                                            )}
-                                                        </span>
-                                                        <span className={isSelected ? "text-[#C8102E]" : "text-neutral-700"}>
-                                                            {model.name}
-                                                        </span>
-                                                    </div>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Col 3 & 4: Numerical Range Sliders & Dropdowns (6 cols) */}
-                        <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-                            {/* Year Slider */}
-                            <div className="flex flex-col justify-between">
-                                <div className="flex items-center justify-between mb-1">
-                                    <span className="text-xs font-bold text-neutral-800 uppercase tracking-wider">
-                                        Manufactured Year
-                                    </span>
-                                </div>
-                                <div className="relative py-2">
+                            <div>
+                                <label className="text-xs font-bold text-neutral-800 uppercase tracking-wider block mb-1.5">
+                                    Brand / Make
+                                </label>
+                                <div className="space-y-2">
                                     <input
-                                        type="range"
-                                        min="1991"
-                                        max="2024"
-                                        value={yearRange.max}
-                                        onChange={(e) =>
-                                            setYearRange((prev) => ({ ...prev, max: Number(e.target.value) }))
-                                        }
-                                        className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#C8102E]"
+                                        type="text"
+                                        value={selectedBrand}
+                                        onChange={(e) => setSelectedBrand(e.target.value)}
+                                        placeholder="e.g. Toyota, Honda, Suzuki"
+                                        className="w-full py-2 px-3 border border-neutral-300 rounded-none bg-white text-sm text-neutral-800 focus:outline-none focus:border-[#C8102E]"
                                     />
-                                </div>
-                                <div className="flex justify-between text-xs text-neutral-500 font-mono">
-                                    <span>{yearRange.min}</span>
-                                    <span className="font-bold text-neutral-800">{yearRange.max}</span>
+                                    {/* Quick Popular Brand Tags */}
+                                    <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pt-1">
+                                        {popularBrands.map((b) => (
+                                            <button
+                                                key={b}
+                                                type="button"
+                                                onClick={() =>
+                                                    setSelectedBrand(
+                                                        selectedBrand.toLowerCase() === b.toLowerCase() ? "" : b
+                                                    )
+                                                }
+                                                className={`text-[11px] px-2.5 py-1 font-semibold transition-colors cursor-pointer border ${
+                                                    selectedBrand.toLowerCase() === b.toLowerCase()
+                                                        ? "bg-[#C8102E] text-white border-[#C8102E]"
+                                                        : "bg-neutral-100 text-neutral-700 border-neutral-200 hover:bg-neutral-200"
+                                                }`}
+                                            >
+                                                {b}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
+                        </div>
 
-                            {/* Price Slider */}
-                            <div className="flex flex-col justify-between">
+                        {/* Col 2: Model & Location (4 cols) */}
+                        <div className="lg:col-span-4 flex flex-col gap-4">
+                            <div>
+                                <label className="text-xs font-bold text-neutral-800 uppercase tracking-wider block mb-1.5">
+                                    Model Series / Name
+                                </label>
+                                <input
+                                    type="text"
+                                    value={selectedModel}
+                                    onChange={(e) => setSelectedModel(e.target.value)}
+                                    placeholder="e.g. Axio, Prius, Prado, Vezel, Pulsar"
+                                    className="w-full py-2.5 px-3 border border-neutral-300 rounded-none bg-white text-sm text-neutral-800 focus:outline-none focus:border-[#C8102E]"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="text-xs font-bold text-neutral-800 uppercase tracking-wider block mb-1.5">
+                                    District (Sri Lanka)
+                                </label>
+                                <select
+                                    value={selectedDistrict}
+                                    onChange={(e) => setSelectedDistrict(e.target.value)}
+                                    className="w-full py-2.5 px-3 border border-neutral-300 rounded-none bg-white text-sm text-neutral-800 focus:outline-none focus:border-[#C8102E] cursor-pointer"
+                                >
+                                    <option value="All Districts">All Districts (Island-wide)</option>
+                                    {SRI_LANKA_DISTRICTS.map((d) => (
+                                        <option key={d} value={d}>
+                                            {d}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="text-xs font-bold text-neutral-800 uppercase tracking-wider block mb-1.5">
+                                    Condition
+                                </label>
+                                <select
+                                    value={selectedCondition}
+                                    onChange={(e) => setSelectedCondition(e.target.value)}
+                                    className="w-full py-2.5 px-3 border border-neutral-300 rounded-none bg-white text-sm text-neutral-800 focus:outline-none focus:border-[#C8102E] cursor-pointer"
+                                >
+                                    <option value="All Conditions">All Conditions</option>
+                                    {VEHICLE_CONDITIONS.map((c) => (
+                                        <option key={c} value={c}>
+                                            {c}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Col 3: Price Slider & Year (4 cols) */}
+                        <div className="lg:col-span-4 flex flex-col justify-between gap-4">
+                            {/* Price Slider - KEPT STILL AND FUNCTIONAL */}
+                            <div className="flex flex-col justify-between bg-neutral-50/70 p-4 border border-neutral-200">
                                 <div className="flex items-center justify-between mb-1">
                                     <span className="text-xs font-bold text-neutral-800 uppercase tracking-wider">
-                                        Price Range ($ USD)
+                                        Price Range (LKR)
+                                    </span>
+                                    <span className="text-xs font-black text-[#C8102E]">
+                                        {priceRange.max >= 100000000
+                                            ? "Any Price"
+                                            : `Up to LKR ${(priceRange.max / 1000000).toFixed(1)}M`}
                                     </span>
                                 </div>
                                 <div className="relative py-2">
                                     <input
                                         type="range"
-                                        min="1000"
-                                        max="90000"
-                                        step="1000"
+                                        min="500000"
+                                        max="100000000"
+                                        step="500000"
                                         value={priceRange.max}
                                         onChange={(e) =>
                                             setPriceRange((prev) => ({ ...prev, max: Number(e.target.value) }))
@@ -317,170 +334,63 @@ export default function HeroSection() {
                                         className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#C8102E]"
                                     />
                                 </div>
-                                <div className="flex justify-between text-xs text-neutral-500 font-mono">
-                                    <span>${priceRange.min.toLocaleString()}</span>
+                                <div className="flex justify-between text-[11px] text-neutral-500 font-mono">
+                                    <span>LKR 500K</span>
                                     <span className="font-bold text-[#C8102E]">
-                                        ${priceRange.max.toLocaleString()}
+                                        {priceRange.max >= 100000000
+                                            ? "LKR 100M+"
+                                            : `LKR ${priceRange.max.toLocaleString()}`}
                                     </span>
                                 </div>
                             </div>
 
-                            {/* Mileage Slider */}
-                            <div className="flex flex-col justify-between">
+                            {/* Manufactured Year Slider */}
+                            <div className="flex flex-col justify-between bg-neutral-50/70 p-4 border border-neutral-200">
                                 <div className="flex items-center justify-between mb-1">
                                     <span className="text-xs font-bold text-neutral-800 uppercase tracking-wider">
-                                        Mileage (km)
+                                        Manufactured Year
+                                    </span>
+                                    <span className="text-xs font-bold text-neutral-800 font-mono">
+                                        {yearRange.min} - {yearRange.max}
                                     </span>
                                 </div>
                                 <div className="relative py-2">
                                     <input
                                         type="range"
-                                        min="1900"
-                                        max="360000"
-                                        step="1000"
-                                        value={mileageRange.max}
+                                        min="1990"
+                                        max={new Date().getFullYear() + 1}
+                                        value={yearRange.min}
                                         onChange={(e) =>
-                                            setMileageRange((prev) => ({ ...prev, max: Number(e.target.value) }))
-                                        }
-                                        className="w-full h-1.5 bg-[#C8102E]/30 rounded-lg appearance-none cursor-pointer accent-[#C8102E]"
-                                    />
-                                </div>
-                                <div className="flex justify-between text-xs text-neutral-500 font-mono">
-                                    <span className="text-[#C8102E] font-semibold">
-                                        {mileageRange.min.toLocaleString()} km
-                                    </span>
-                                    <span className="text-[#C8102E] font-bold">
-                                        {mileageRange.max.toLocaleString()} km
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Engine Volume Slider */}
-                            <div className="flex flex-col justify-between">
-                                <div className="flex items-center justify-between mb-1">
-                                    <span className="text-xs font-bold text-neutral-800 uppercase tracking-wider">
-                                        Engine Volume (L)
-                                    </span>
-                                </div>
-                                <div className="relative py-2">
-                                    <input
-                                        type="range"
-                                        min="1.0"
-                                        max="5.5"
-                                        step="0.1"
-                                        value={engineVolume.max}
-                                        onChange={(e) =>
-                                            setEngineVolume((prev) => ({ ...prev, max: Number(e.target.value) }))
+                                            setYearRange((prev) => ({ ...prev, min: Number(e.target.value) }))
                                         }
                                         className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#C8102E]"
                                     />
                                 </div>
-                                <div className="flex justify-between text-xs text-neutral-500 font-mono">
-                                    <span>{engineVolume.min.toFixed(1)} L</span>
-                                    <span className="font-bold text-neutral-800">
-                                        {engineVolume.max.toFixed(1)} L
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Cabin Seats Select */}
-                            <div className="flex flex-col justify-between">
-                                <span className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1">
-                                    Cabin Seating
-                                </span>
-                                <div className="relative">
-                                    <select
-                                        value={seats}
-                                        onChange={(e) => setSeats(e.target.value)}
-                                        className="w-full py-2 px-3 border border-neutral-300 rounded-none bg-white text-sm text-neutral-800 focus:outline-none focus:border-[#C8102E] appearance-none cursor-pointer"
-                                    >
-                                        <option value="All">All Seating Capacities</option>
-                                        <option value="2">2 Seats (Coupe / Roadster)</option>
-                                        <option value="4">4 Seats</option>
-                                        <option value="5">5 Seats (Sedan / SUV)</option>
-                                        <option value="7">7+ Seats (Van / Large SUV)</option>
-                                    </select>
-                                    <svg
-                                        className="w-4 h-4 text-neutral-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="2"
-                                        stroke="currentColor"
-                                    >
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                    </svg>
-                                </div>
-                            </div>
-
-                            {/* Engine Power Slider */}
-                            <div className="flex flex-col justify-between">
-                                <div className="flex items-center justify-between mb-1">
-                                    <span className="text-xs font-bold text-neutral-800 uppercase tracking-wider">
-                                        Engine Power (HP)
-                                    </span>
-                                </div>
-                                <div className="relative py-2">
-                                    <input
-                                        type="range"
-                                        min="100"
-                                        max="800"
-                                        step="10"
-                                        value={powerRange.max}
-                                        onChange={(e) =>
-                                            setPowerRange((prev) => ({ ...prev, max: Number(e.target.value) }))
-                                        }
-                                        className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#C8102E]"
-                                    />
-                                </div>
-                                <div className="flex justify-between text-xs text-neutral-500 font-mono">
-                                    <span>{powerRange.min} hp</span>
-                                    <span className="font-bold text-neutral-800">{powerRange.max} hp</span>
+                                <div className="flex justify-between text-[11px] text-neutral-500 font-mono">
+                                    <span>Min: {yearRange.min}</span>
+                                    <span>Max: {yearRange.max}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Bottom Action / Sort Bar */}
+                    {/* Bottom Action Bar */}
                     <div className="bg-neutral-100/80 px-6 sm:px-8 py-4 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        {/* Sort Dropdown */}
-                        <div className="flex items-center gap-3 w-full sm:w-auto">
-                            <span className="text-xs font-bold uppercase tracking-wider text-neutral-600">
-                                Sort By:
-                            </span>
-                            <div className="relative min-w-[180px]">
-                                <select
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value)}
-                                    className="w-full py-2 px-3 border border-neutral-300 rounded-none bg-white text-xs font-medium text-neutral-800 focus:outline-none focus:border-neutral-500 appearance-none cursor-pointer"
-                                >
-                                    <option value="Recommended">Recommended</option>
-                                    <option value="PriceLowHigh">Price: Low to High</option>
-                                    <option value="PriceHighLow">Price: High to Low</option>
-                                    <option value="YearNew">Year: Newest First</option>
-                                    <option value="MileageLow">Mileage: Lowest First</option>
-                                </select>
-                                <svg
-                                    className="w-3.5 h-3.5 text-neutral-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="2"
-                                    stroke="currentColor"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                </svg>
-                            </div>
-                        </div>
+                        <p className="text-xs text-neutral-500 hidden sm:block">
+                            Select criteria and click Search to explore all matching verified vehicles.
+                        </p>
 
                         {/* Search Action Button */}
-                        <Link
-                            href="/vehicles"
-                            className="w-full sm:w-auto px-8 py-3.5 text-sm font-bold tracking-wider text-white bg-neutral-900 hover:bg-black rounded-none transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                        <button
+                            type="button"
+                            onClick={handleSearch}
+                            className="w-full sm:w-auto px-10 py-3.5 text-sm font-black tracking-wider text-white bg-neutral-900 hover:bg-[#C8102E] rounded-none transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99] sm:ml-auto"
                         >
                             <span>SEARCH VEHICLES</span>
                             <svg className="w-4 h-4 fill-none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                             </svg>
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
