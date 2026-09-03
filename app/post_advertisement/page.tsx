@@ -285,19 +285,19 @@ export default function PostAdvertisementPage() {
                                 </svg>
                             </div>
 
-                            <span className="inline-block px-4 py-1 text-xs font-extrabold uppercase tracking-widest text-emerald-800 bg-emerald-50 border border-emerald-300 mb-3">
-                                Advertisement Published
+                            <span className="inline-block px-4 py-1 text-xs font-extrabold uppercase tracking-widest text-amber-800 bg-amber-50 border border-amber-300 mb-3">
+                                Submission Received • Pending Admin Review
                             </span>
 
                             <h2 className="text-2xl sm:text-3xl font-black text-neutral-900">
                                 {formData.brand} {formData.model} ({formData.year})
                             </h2>
-                            <p className="text-neutral-600 text-sm sm:text-base mt-2 max-w-md mx-auto">
-                                Your have Successfully published the Advertisement. Reference ID:
+                            <p className="text-neutral-600 text-sm sm:text-base mt-2 max-w-lg mx-auto">
+                                Your advertisement has been successfully submitted and is currently being reviewed by our administrative team. Once approved, it will be published live to the vehicle marketplace.
                             </p>
 
                             <div className="my-6 inline-block bg-neutral-900 text-white font-mono font-black text-xl px-6 py-3 tracking-widest border border-neutral-700 shadow-md">
-                                {adRefId}
+                                Ref: {adRefId}
                             </div>
 
                             <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
@@ -305,7 +305,7 @@ export default function PostAdvertisementPage() {
                                     href="/vehicles"
                                     className="px-6 py-3 bg-[#0F52BA] hover:bg-[#0c4399] text-white text-xs font-bold uppercase tracking-wider transition-all"
                                 >
-                                    View in Catalog
+                                    Browse All Vehicles
                                 </Link>
                                 <button
                                     type="button"
@@ -653,10 +653,10 @@ export default function PostAdvertisementPage() {
                                         if (selectedImages.length < 5) fileInputRef.current?.click();
                                     }}
                                     className={`border-2 border-dashed p-6 sm:p-8 text-center transition-all cursor-pointer ${isDragging
-                                            ? "border-[#0F52BA] bg-blue-50/60 scale-[1.01]"
-                                            : errors.images
-                                                ? "border-red-400 bg-red-50/20 hover:border-red-500"
-                                                : "border-neutral-300 hover:border-[#0F52BA] bg-neutral-50/60 hover:bg-blue-50/30"
+                                        ? "border-[#0F52BA] bg-blue-50/60 scale-[1.01]"
+                                        : errors.images
+                                            ? "border-red-400 bg-red-50/20 hover:border-red-500"
+                                            : "border-neutral-300 hover:border-[#0F52BA] bg-neutral-50/60 hover:bg-blue-50/30"
                                         }`}
                                 >
                                     <div className="w-12 h-12 bg-neutral-100 text-neutral-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
@@ -879,9 +879,6 @@ export default function PostAdvertisementPage() {
                                     <h3 className="font-extrabold text-base sm:text-lg">
                                         Ready to Publish Your Advertisement?
                                     </h3>
-                                    <p className="text-xs text-neutral-400 mt-1">
-                                        Photos will be uploaded to ImageKit and details saved securely to MongoDB.
-                                    </p>
                                 </div>
                                 <button
                                     type="submit"

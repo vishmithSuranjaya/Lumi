@@ -15,7 +15,7 @@ async function getVehicles(): Promise<VehicleAd[]> {
 
         const rawAds = await db
             .collection("advertisements")
-            .find({ status: "active" })
+            .find({ status: { $in: ["approved", "active"] } })
             .sort({ createdAt: -1 })
             .toArray();
 

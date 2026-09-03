@@ -43,7 +43,7 @@ const navSections: NavSection[] = [
       {
         name: "Vehicle Fleet",
         href: "/admin/vehicles",
-        badge: "142",
+        badge: "",
         icon: (
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -54,7 +54,7 @@ const navSections: NavSection[] = [
       {
         name: "Ad Approvals",
         href: "/admin/advertisements",
-        badge: "9 new",
+        badge: "",
         badgeColor: "bg-amber-500/20 text-amber-400 border border-amber-500/30",
         icon: (
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,7 +65,7 @@ const navSections: NavSection[] = [
       {
         name: "Customer Offers",
         href: "/admin/offers",
-        badge: "5",
+        badge: "",
         icon: (
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -124,9 +124,8 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 z-50 w-72 bg-neutral-950 border-r border-neutral-800/80 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 bottom-0 z-50 w-72 bg-neutral-950 border-r border-neutral-800/80 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {/* Brand Header */}
         <div className="h-20 px-6 flex items-center justify-between border-b border-neutral-800/80 bg-neutral-950">
@@ -173,11 +172,10 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                       key={item.href}
                       href={item.href}
                       onClick={() => onClose()}
-                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
-                        isActive
-                          ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold"
-                          : "text-neutral-300 hover:text-white hover:bg-neutral-900"
-                      }`}
+                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${isActive
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold"
+                        : "text-neutral-300 hover:text-white hover:bg-neutral-900"
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <span className={`${isActive ? "text-white" : "text-neutral-400 group-hover:text-blue-400 transition-colors"}`}>
@@ -188,9 +186,8 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
                       {item.badge && (
                         <span
-                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            item.badgeColor || (isActive ? "bg-white/20 text-white" : "bg-neutral-800 text-neutral-400")
-                          }`}
+                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${item.badgeColor || (isActive ? "bg-white/20 text-white" : "bg-neutral-800 text-neutral-400")
+                            }`}
                         >
                           {item.badge}
                         </span>
