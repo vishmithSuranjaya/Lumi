@@ -1,8 +1,9 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
     { name: "Home", href: "/", subtitle: "Main Overview & Catalog" },
@@ -13,9 +14,30 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+    const { user, loading: authLoading, logout, openAuthModal } = useAuth();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const pathname = usePathname();
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Close user dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setUserDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    // Close menus on route change
+    useEffect(() => {
+        setUserDropdownOpen(false);
+        setMobileMenuOpen(false);
+    }, [pathname]);
+
 
     // Trigger Left-to-Right loading bar animation on route change or initial render
     useEffect(() => {
@@ -92,12 +114,108 @@ export default function Navbar() {
 
                         {/* Desktop Right Action Buttons */}
                         <div className="hidden md:flex items-center gap-3">
-                            <Link
-                                href="/signin"
-                                className="px-5 sm:px-6 py-2.5 text-sm font-semibold text-white bg-[#0F52BA] border border-[#0F52BA] rounded-none hover:bg-[#0c4399] hover:border-[#0c4399] transition-all inline-flex items-center justify-center shadow-xs whitespace-nowrap active:scale-95 cursor-pointer"
-                            >
-                                Sign in
-                            </Link>
+                            {authLoading ? (
+                                <div className="w-20 h-9 bg-neutral-100 animate-pulse"></div>
+                            ) : user ? (
+                                <div className="relative" ref={dropdownRef}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                                        className="flex items-center gap-2.5 px-3 py-1.5 border border-neutral-200 hover:border-neutral-300 bg-neutral-50 hover:bg-neutral-100 transition-all cursor-pointer"
+                                    >
+                                        {user.avatar ? (
+                                            <img
+                                                src={user.avatar}
+                                                alt={user.name}
+                                                className="w-7 h-7 rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-7 h-7 rounded-full bg-[#0F52BA] text-white flex items-center justify-center font-bold text-xs uppercase">
+                                                {user.name.charAt(0)}
+                                            </div>
+                                        )}
+                                        <div className="text-left flex flex-col">
+                                            <span className="text-xs font-bold text-neutral-800 leading-tight max-w-[120px] truncate">
+                                                {user.name}
+                                            </span>
+                                            <span className="text-[10px] uppercase tracking-wider font-semibold text-neutral-500">
+                                                {user.role === "admin" ? (
+                                                    <span className="text-purple-600 font-bold">Admin</span>
+                                                ) : (
+                                                    "Member"
+                                                )}
+                                            </span>
+                                        </div>
+                                        <svg
+                                            className={`w-3.5 h-3.5 text-neutral-500 transition-transform ${userDropdownOpen ? "rotate-180" : ""}`}
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+
+                                    {/* Desktop User Dropdown */}
+                                    {userDropdownOpen && (
+                                        <div className="absolute right-0 mt-2 w-60 bg-white border border-neutral-200 shadow-xl py-2 z-50 animate-in fade-in">
+                                            <div className="px-4 py-2 border-b border-neutral-100">
+                                                <p className="text-xs font-bold text-neutral-900 truncate">{user.name}</p>
+                                                <p className="text-[11px] text-neutral-500 truncate">{user.email}</p>
+                                            </div>
+
+                                            {user.role === "admin" && (
+                                                <Link
+                                                    href="/admin"
+                                                    onClick={() => setUserDropdownOpen(false)}
+                                                    className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-purple-700 hover:bg-purple-50 transition-colors"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                                    </svg>
+                                                    <span>Admin Dashboard</span>
+                                                </Link>
+                                            )}
+
+                                            <Link
+                                                href="/post_advertisement"
+                                                onClick={() => setUserDropdownOpen(false)}
+                                                className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
+                                            >
+                                                <svg className="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                                </svg>
+                                                <span>Post an Advertisement</span>
+                                            </Link>
+
+                                            <div className="border-t border-neutral-100 my-1"></div>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setUserDropdownOpen(false);
+                                                    logout();
+                                                }}
+                                                className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors text-left cursor-pointer"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                </svg>
+                                                <span>Sign Out</span>
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => openAuthModal("signin")}
+                                    className="px-5 sm:px-6 py-2.5 text-sm font-semibold text-white bg-[#0F52BA] border border-[#0F52BA] rounded-none hover:bg-[#0c4399] hover:border-[#0c4399] transition-all inline-flex items-center justify-center shadow-xs whitespace-nowrap active:scale-95 cursor-pointer"
+                                >
+                                    Sign in
+                                </button>
+                            )}
+
                             <Link
                                 href="/post_advertisement"
                                 className="px-5 sm:px-6 py-2.5 text-sm font-semibold text-[#0F52BA] bg-white border border-[#0F52BA] rounded-none hover:bg-[#0F52BA] hover:text-white transition-all inline-flex items-center justify-center whitespace-nowrap active:scale-95 cursor-pointer"
@@ -108,12 +226,29 @@ export default function Navbar() {
 
                         {/* Mobile Hamburger & Quick Action */}
                         <div className="flex md:hidden items-center gap-2.5">
-                            <Link
-                                href="/signin"
-                                className="px-3.5 py-1.5 text-xs font-bold text-white bg-[#0F52BA] hover:bg-[#0c4399] transition-colors"
-                            >
-                                Sign in
-                            </Link>
+                            {authLoading ? null : user ? (
+                                <Link
+                                    href={user.role === "admin" ? "/admin" : "#"}
+                                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-neutral-100 border border-neutral-200 text-xs font-bold text-neutral-800"
+                                >
+                                    {user.avatar ? (
+                                        <img src={user.avatar} alt="" className="w-5 h-5 rounded-full" />
+                                    ) : (
+                                        <div className="w-5 h-5 rounded-full bg-[#0F52BA] text-white flex items-center justify-center text-[10px]">
+                                            {user.name.charAt(0)}
+                                        </div>
+                                    )}
+                                    <span className="max-w-[70px] truncate">{user.name.split(" ")[0]}</span>
+                                </Link>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => openAuthModal("signin")}
+                                    className="px-3.5 py-1.5 text-xs font-bold text-white bg-[#0F52BA] hover:bg-[#0c4399] transition-colors cursor-pointer"
+                                >
+                                    Sign in
+                                </button>
+                            )}
 
                             {/* Hamburger Trigger Button */}
                             <button
@@ -210,6 +345,27 @@ export default function Navbar() {
 
                 {/* Bottom Full Screen Actions & Contact Bar */}
                 <div className="relative z-10 px-6 sm:px-8 py-6 border-t border-neutral-800 bg-neutral-950/60 space-y-4">
+                    {user ? (
+                        <div className="p-3 bg-neutral-900 border border-neutral-800 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                {user.avatar ? (
+                                    <img src={user.avatar} alt="" className="w-9 h-9 rounded-full object-cover" />
+                                ) : (
+                                    <div className="w-9 h-9 rounded-full bg-[#0F52BA] text-white flex items-center justify-center font-bold text-sm">
+                                        {user.name.charAt(0)}
+                                    </div>
+                                )}
+                                <div>
+                                    <p className="text-xs font-bold text-white truncate max-w-[150px]">{user.name}</p>
+                                    <p className="text-[10px] text-neutral-400 truncate max-w-[150px]">{user.email}</p>
+                                </div>
+                            </div>
+                            <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-neutral-800 text-neutral-300 rounded-sm">
+                                {user.role}
+                            </span>
+                        </div>
+                    ) : null}
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <Link
                             href="/post_advertisement"
@@ -218,13 +374,29 @@ export default function Navbar() {
                         >
                             Post an Advertisement
                         </Link>
-                        <Link
-                            href="/signin"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="w-full py-3.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-center text-xs font-bold uppercase tracking-wider transition-all block"
-                        >
-                            Sign in
-                        </Link>
+                        {user ? (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    logout();
+                                }}
+                                className="w-full py-3.5 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 text-center text-xs font-bold uppercase tracking-wider transition-all block cursor-pointer"
+                            >
+                                Sign Out
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    openAuthModal("signin");
+                                }}
+                                className="w-full py-3.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-center text-xs font-bold uppercase tracking-wider transition-all block cursor-pointer"
+                            >
+                                Sign in
+                            </button>
+                        )}
                     </div>
 
                     <div className="flex items-center justify-between text-xs text-neutral-400 pt-2">
