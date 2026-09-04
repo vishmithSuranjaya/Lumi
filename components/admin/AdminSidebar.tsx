@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 interface AdminSidebarProps {
   isOpen: boolean;
@@ -43,7 +44,7 @@ const navSections: NavSection[] = [
       {
         name: "Vehicle Fleet",
         href: "/admin/vehicles",
-        badge: "142",
+        badge: "",
         icon: (
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -54,7 +55,7 @@ const navSections: NavSection[] = [
       {
         name: "Ad Approvals",
         href: "/admin/advertisements",
-        badge: "9 new",
+        badge: "",
         badgeColor: "bg-amber-500/20 text-amber-400 border border-amber-500/30",
         icon: (
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,7 +66,7 @@ const navSections: NavSection[] = [
       {
         name: "Customer Offers",
         href: "/admin/offers",
-        badge: "5",
+        badge: "",
         icon: (
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -111,6 +112,7 @@ const navSections: NavSection[] = [
 
 export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
+  const { user, logout } = useAuth();
 
   return (
     <>
@@ -124,9 +126,8 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 z-50 w-72 bg-neutral-950 border-r border-neutral-800/80 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 bottom-0 z-50 w-72 bg-neutral-950 border-r border-neutral-800/80 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {/* Brand Header */}
         <div className="h-20 px-6 flex items-center justify-between border-b border-neutral-800/80 bg-neutral-950">
@@ -173,11 +174,10 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                       key={item.href}
                       href={item.href}
                       onClick={() => onClose()}
-                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
-                        isActive
-                          ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold"
-                          : "text-neutral-300 hover:text-white hover:bg-neutral-900"
-                      }`}
+                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${isActive
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold"
+                        : "text-neutral-300 hover:text-white hover:bg-neutral-900"
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <span className={`${isActive ? "text-white" : "text-neutral-400 group-hover:text-blue-400 transition-colors"}`}>
@@ -188,9 +188,8 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
                       {item.badge && (
                         <span
-                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            item.badgeColor || (isActive ? "bg-white/20 text-white" : "bg-neutral-800 text-neutral-400")
-                          }`}
+                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${item.badgeColor || (isActive ? "bg-white/20 text-white" : "bg-neutral-800 text-neutral-400")
+                            }`}
                         >
                           {item.badge}
                         </span>
@@ -220,18 +219,35 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider">Public</span>
           </Link>
 
-          {/* Admin User Profile Card */}
-          <div className="flex items-center gap-3 px-2 pt-2">
-            <div className="relative">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white font-bold text-sm shadow-inner">
-                AD
+          {/* Admin User Profile Card & Sign Out */}
+          <div className="flex items-center justify-between gap-2 px-2 pt-2 border-t border-neutral-800/60">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="relative flex-shrink-0">
+                {user?.avatar ? (
+                  <img src={user.avatar} alt="" className="w-9 h-9 rounded-full object-cover" />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#0F52BA] to-indigo-500 flex items-center justify-center text-white font-bold text-sm shadow-inner">
+                    {user?.name ? user.name.charAt(0).toUpperCase() : "AD"}
+                  </div>
+                )}
+                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-neutral-950 rounded-full" />
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-neutral-950 rounded-full" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white truncate">{user?.name || "Administrator"}</p>
+                <p className="text-xs text-neutral-400 truncate">{user?.email || "admin@lumi.lk"}</p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">Administrator</p>
-              <p className="text-xs text-neutral-400 truncate">admin@autovault.com</p>
-            </div>
+
+            <button
+              type="button"
+              onClick={() => logout()}
+              title="Sign Out"
+              className="p-2 rounded-lg text-neutral-400 hover:text-red-400 hover:bg-neutral-900 transition-colors cursor-pointer"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
           </div>
         </div>
       </aside>

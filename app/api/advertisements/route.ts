@@ -35,13 +35,19 @@ export async function POST(request: Request) {
         const db = client.db("myfirstapp");
         const collection = db.collection("advertisements");
 
-        // 3. Generate unique reference ID
-        const refId = `LUMI-${Math.floor(100000 + Math.random() * 900000)}`;
+        // 3. Generate collision-resistant timestamp-based reference ID (e.g. LUMI-KM9X2A-8F4B)
+        const timestampPart = Date.now().toString(36).toUpperCase();
+        const randomSalt = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const refId = `LUMI-${timestampPart}-${randomSalt}`;
 
         const documentToInsert = {
             ...validation.sanitized,
             refId,
-            status: "active",
+            status: "pending", // Newly submitted ads require admin approval before going live
+            reviewedAt: null,
+            reviewedBy: null,
+            rejectionReason: null,
+            adminNotes: null,
             views: 0,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -53,7 +59,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
             {
                 success: true,
-                message: "Advertisement published successfully!",
+                message: "Advertisement submitted successfully and is pending admin approval.",
                 refId,
                 insertedId: insertResult.insertedId.toString(),
             },
@@ -79,7 +85,10 @@ export async function GET(request: Request) {
         const district = searchParams.get("district");
         const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10), 100);
 
-        const filter: Record<string, any> = { status: "active" };
+        // Only approved (or legacy active) advertisements appear in the public API
+        const filter: Record<string, any> = {
+            status: { $in: ["approved", "active"] },
+        };
         if (category) filter.category = category;
         if (district) filter.district = district;
 
