@@ -226,7 +226,7 @@ export default function ContactPage() {
                                         </div>
                                         <div>
                                             <strong className="block text-neutral-900 font-bold">Address</strong>
-                                            <span>No. 120, Horton Place, Colombo 07, Sri Lanka</span>
+                                            {/* <span>No. 120, Horton Place, Colombo 07, Sri Lanka</span> */}
                                         </div>
                                     </div>
 
@@ -239,7 +239,7 @@ export default function ContactPage() {
                                         </div>
                                         <div>
                                             <strong className="block text-neutral-900 font-bold">Hotline & Inquiries</strong>
-                                            <span>+94 11 234 5678 / +94 77 123 4567</span>
+                                            {/* <span>+94 11 234 5678 / +94 77 123 4567</span> */}
                                         </div>
                                     </div>
 
@@ -252,7 +252,7 @@ export default function ContactPage() {
                                         </div>
                                         <div>
                                             <strong className="block text-neutral-900 font-bold">Email</strong>
-                                            <span>concierge@aurra-motors.lk</span>
+                                            {/* <span>concierge@aurra-motors.lk</span> */}
                                         </div>
                                     </div>
 
