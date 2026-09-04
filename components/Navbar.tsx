@@ -9,6 +9,7 @@ const navLinks = [
     { name: "Home", href: "/", subtitle: "Main Overview & Catalog" },
     { name: "Vehicles", href: "/vehicles", subtitle: "Certified Fleet Inventory" },
     { name: "Offers", href: "/offers", subtitle: "Seasonal Deals & Leasing" },
+    { name: "Price Predictor", href: "/price-predictor", subtitle: "AI Market Valuation" },
     { name: "About Us", href: "/about_us", subtitle: "Heritage & Philosophy" },
     { name: "Contact Us", href: "/contact_us", subtitle: "Showroom & Inquiries" },
 ];

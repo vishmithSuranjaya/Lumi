@@ -4,9 +4,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-    title: "About Us | AURRA Automotive Sri Lanka",
+    title: "About Us | LUMI Automotive Sri Lanka",
     description:
-        "Learn about AURRA Automotive, Sri Lanka's premier destination for luxury vehicles, high-performance supercars, and bespoke automotive concierge services.",
+        "Learn about LUMI Automotive, Sri Lanka's premier destination for luxury vehicles, high-performance supercars, and bespoke automotive concierge services.",
 };
 
 export default function AboutUsPage() {
@@ -81,7 +81,7 @@ export default function AboutUsPage() {
                     <div className="bg-white border border-neutral-200/90 shadow-xl grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-neutral-200">
                         <div className="p-6 sm:p-8 text-center">
                             <span className="block text-2xl sm:text-3xl md:text-4xl font-black text-[#0F52BA]">
-                                15+
+                                {/* add the number here... */}
                             </span>
                             <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-800 mt-1 block">
                                 Years of Heritage
@@ -90,7 +90,7 @@ export default function AboutUsPage() {
                         </div>
                         <div className="p-6 sm:p-8 text-center">
                             <span className="block text-2xl sm:text-3xl md:text-4xl font-black text-[#C8102E]">
-                                2,500+
+                                {/* add the number here... */}
                             </span>
                             <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-800 mt-1 block">
                                 Verified Deliveries
@@ -99,7 +99,7 @@ export default function AboutUsPage() {
                         </div>
                         <div className="p-6 sm:p-8 text-center">
                             <span className="block text-2xl sm:text-3xl md:text-4xl font-black text-[#0F52BA]">
-                                50+
+                                {/* add the number here... */}
                             </span>
                             <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-800 mt-1 block">
                                 Global Brands
@@ -108,7 +108,7 @@ export default function AboutUsPage() {
                         </div>
                         <div className="p-6 sm:p-8 text-center">
                             <span className="block text-2xl sm:text-3xl md:text-4xl font-black text-neutral-900">
-                                99.8%
+                                {/* add the number here... */}
                             </span>
                             <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-800 mt-1 block">
                                 Client Satisfaction
