@@ -11,6 +11,8 @@ export interface AuthUser {
     role: "user" | "admin";
     avatar?: string;
     phone?: string;
+    authProvider?: "credentials" | "google";
+    createdAt?: string | Date;
 }
 
 interface AuthContextType {
@@ -84,10 +86,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error("Logout request failed:", err);
         } finally {
             setUser(null);
-            router.push("/");
-            router.refresh();
+            window.location.href = "/";
         }
-    }, [router]);
+    }, []);
 
     return (
         <AuthContext.Provider

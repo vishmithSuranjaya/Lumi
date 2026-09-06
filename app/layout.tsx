@@ -17,6 +17,15 @@ import { AuthProvider } from "@/context/AuthContext";
 export const metadata: Metadata = {
   title: "LUMI | Certified Pre-Owned & Luxury Vehicles",
   description: "Sri Lanka's premier automotive marketplace for luxury, verified and certified vehicles.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

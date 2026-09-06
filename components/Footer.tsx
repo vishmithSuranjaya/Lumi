@@ -240,7 +240,7 @@ export default function Footer() {
             {/* Bottom Copyright Bar */}
             <div className="border-t border-neutral-850 bg-[#050505] py-4 md:py-6">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
-                    <p>© {new Date().getFullYear()} AURRA Automotive. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} LUMI Automotive. All rights reserved.</p>
 
                     <div className="flex items-center gap-4 sm:gap-6">
                         <Link href="/privacy" className="hover:text-neutral-300 transition-colors">

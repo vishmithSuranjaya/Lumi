@@ -23,7 +23,18 @@ export async function middleware(request: NextRequest) {
     }
 
     const isAdminRoute = pathname.startsWith("/admin");
+    const isProfileRoute = pathname.startsWith("/profile");
     const isAuthPage = pathname === "/signin" || pathname === "/signup";
+
+    // Protect Profile routes (users must be logged in)
+    if (isProfileRoute) {
+        if (!session) {
+            const redirectUrl = new URL("/signin", request.url);
+            redirectUrl.searchParams.set("redirect", pathname);
+            redirectUrl.searchParams.set("error", "auth_required");
+            return NextResponse.redirect(redirectUrl);
+        }
+    }
 
     // Protect Admin routes
     if (isAdminRoute) {
@@ -58,5 +69,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/admin/:path*", "/signin", "/signup"],
+    matcher: ["/admin/:path*", "/profile/:path*", "/signin", "/signup"],
 };

@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useAuth } from "@/context/AuthContext";
 import {
     validateAdvertisement,
     VEHICLE_CATEGORIES,
@@ -21,6 +22,7 @@ interface SelectedImageItem {
 }
 
 export default function PostAdvertisementPage() {
+    const { user } = useAuth();
     const [formData, setFormData] = useState({
         category: "Cars & Sedans",
         brand: "",
@@ -59,6 +61,18 @@ export default function PostAdvertisementPage() {
             selectedImages.forEach((img) => URL.revokeObjectURL(img.preview));
         };
     }, [selectedImages]);
+
+    // Auto-fill seller credentials if logged in
+    useEffect(() => {
+        if (user) {
+            setFormData((prev) => ({
+                ...prev,
+                sellerName: prev.sellerName || user.name || "",
+                sellerEmail: prev.sellerEmail || user.email || "",
+                sellerPhone: prev.sellerPhone || user.phone || "",
+            }));
+        }
+    }, [user]);
 
     const handleChange = (field: string, value: any) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
