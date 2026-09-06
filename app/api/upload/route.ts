@@ -48,6 +48,9 @@ export async function POST(request: Request) {
             }
         }
 
+        const rawFolder = (formData.get("folder") as string)?.trim() || "/vehicles";
+        const targetFolder = rawFolder.startsWith("/") ? rawFolder : `/${rawFolder}`;
+
         // Upload files to ImageKit in parallel
         const uploadPromises = files.map(async (file) => {
             const arrayBuffer = await file.arrayBuffer();
@@ -57,7 +60,7 @@ export async function POST(request: Request) {
             const uploadResult = await imagekit.upload({
                 file: buffer,
                 fileName: `${Date.now()}_${safeName}`,
-                folder: "/vehicles",
+                folder: targetFolder,
                 useUniqueFileName: true,
             });
 

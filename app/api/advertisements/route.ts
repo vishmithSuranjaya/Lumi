@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { validateAdvertisement } from "@/lib/validations/advertisement";
+import { getSessionUser } from "@/lib/auth";
 
 export async function POST(request: Request) {
     try {
@@ -40,9 +41,13 @@ export async function POST(request: Request) {
         const randomSalt = Math.random().toString(36).substring(2, 6).toUpperCase();
         const refId = `LUMI-${timestampPart}-${randomSalt}`;
 
+        const session = await getSessionUser();
+
         const documentToInsert = {
             ...validation.sanitized,
             refId,
+            userId: session?.id || null,
+            userEmail: session?.email ? session.email.toLowerCase() : validation.sanitized.sellerEmail.toLowerCase(),
             status: "pending", // Newly submitted ads require admin approval before going live
             reviewedAt: null,
             reviewedBy: null,

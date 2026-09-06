@@ -33,6 +33,8 @@ export async function GET() {
                 role: dbUser.role || "user",
                 avatar: dbUser.avatar,
                 phone: dbUser.phone,
+                authProvider: dbUser.authProvider || "credentials",
+                createdAt: dbUser.createdAt,
             },
         });
     } catch (error) {
