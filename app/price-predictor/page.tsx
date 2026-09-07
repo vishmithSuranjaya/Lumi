@@ -136,6 +136,10 @@ export default function PricePredictorPage() {
                             </Link>
                             <span className="text-neutral-500">/</span>
                             <span className="text-[#87CEEB]">AI Valuation Engine</span>
+                            <span className="text-neutral-500">•</span>
+                            <span className="text-amber-400 font-extrabold text-[10px] tracking-widest px-2 py-0.5 bg-amber-400/20 border border-amber-400/30 rounded-full">
+                                IN DEVELOPMENT
+                            </span>
                         </div>
 
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -165,6 +169,28 @@ export default function PricePredictorPage() {
 
                 {/* Main Content Area */}
                 <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+                    {/* Development Phase Notice Banner */}
+                    <div className="mb-8 p-4 sm:p-5 bg-amber-50 border border-amber-200 border-l-4 border-l-amber-500 flex items-start gap-3.5 shadow-xs">
+                        <div className="p-2 bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            </svg>
+                        </div>
+                        <div className="flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-[11px] font-black uppercase tracking-wider text-amber-900 bg-amber-200/90 px-2 py-0.5">
+                                    Development Phase
+                                </span>
+                                <span className="text-xs font-bold text-amber-900">
+                                    Notice & Disclaimer
+                                </span>
+                            </div>
+                            <p className="text-xs sm:text-sm text-neutral-700 mt-1.5 leading-relaxed">
+                                Please note that this vehicle price prediction tool is currently in the <strong className="font-semibold text-neutral-900">development phase</strong>. Generated values are algorithmic estimates, and actual prices <strong className="font-semibold text-neutral-900">may vary with current market prices</strong>, localized demand, vehicle condition, and seller negotiations.
+                            </p>
+                        </div>
+                    </div>
+
                     <form onSubmit={handleSubmit} className="space-y-8">
                         {/* Section 1: Vehicle Identity */}
                         <div className="bg-white border border-neutral-200/90 shadow-xs p-6 sm:p-8">
@@ -508,6 +534,19 @@ export default function PricePredictorPage() {
                                         (approx. <strong className="text-neutral-900 font-bold">Rs. {predictedLkr.toLocaleString()} LKR</strong>)
                                     </span>
                                 )}
+                            </div>
+
+                            {/* Development Phase & Market Variance Disclaimer */}
+                            <div className="mb-6 p-4 bg-amber-50/90 border border-amber-200 flex items-start gap-3">
+                                <svg className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                </svg>
+                                <div className="text-xs text-neutral-700 leading-relaxed">
+                                    <span className="font-bold text-amber-900 uppercase tracking-wide block mb-0.5">
+                                        Development Phase Notice • Market Price Variance
+                                    </span>
+                                    This prediction function is currently in the development phase. The estimated valuation is based on historical machine learning data and actual prices may vary with real-time market prices, individual seller negotiations, and vehicle condition.
+                                </div>
                             </div>
 
                             {/* Summary Metadata Grid */}
