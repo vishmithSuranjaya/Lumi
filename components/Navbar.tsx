@@ -165,16 +165,18 @@ export default function Navbar() {
                                                 <p className="text-[11px] text-neutral-500 truncate">{user.email}</p>
                                             </div>
 
-                                            <Link
-                                                href="/profile"
-                                                onClick={() => setUserDropdownOpen(false)}
-                                                className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-neutral-800 hover:bg-neutral-50 hover:text-[#0F52BA] transition-colors"
-                                            >
-                                                <svg className="w-4 h-4 text-[#0F52BA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                                <span>My Profile</span>
-                                            </Link>
+                                            {user.role !== "admin" && (
+                                                <Link
+                                                    href="/profile"
+                                                    onClick={() => setUserDropdownOpen(false)}
+                                                    className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-neutral-800 hover:bg-neutral-50 hover:text-[#0F52BA] transition-colors"
+                                                >
+                                                    <svg className="w-4 h-4 text-[#0F52BA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                    </svg>
+                                                    <span>My Profile</span>
+                                                </Link>
+                                            )}
 
                                             {user.role === "admin" && (
                                                 <Link
@@ -240,14 +242,14 @@ export default function Navbar() {
                         <div className="flex md:hidden items-center gap-2.5">
                             {authLoading ? null : user ? (
                                 <Link
-                                    href="/profile"
+                                    href={user.role === "admin" ? "/admin" : "/profile"}
                                     className="flex items-center gap-1.5 px-2.5 py-1.5 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-xs font-bold text-neutral-800 transition-colors"
-                                    title="View Profile"
+                                    title={user.role === "admin" ? "Admin Dashboard" : "View Profile"}
                                 >
                                     {user.avatar ? (
                                         <img src={user.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
                                     ) : (
-                                        <div className="w-5 h-5 rounded-full bg-[#0F52BA] text-white flex items-center justify-center text-[10px]">
+                                        <div className={`w-5 h-5 rounded-full ${user.role === "admin" ? "bg-purple-700" : "bg-[#0F52BA]"} text-white flex items-center justify-center text-[10px]`}>
                                             {user.name.charAt(0)}
                                         </div>
                                     )}
@@ -360,7 +362,7 @@ export default function Navbar() {
                 <div className="relative z-10 px-6 sm:px-8 py-6 border-t border-neutral-800 bg-neutral-950/60 space-y-4">
                     {user ? (
                         <Link
-                            href="/profile"
+                            href={user.role === "admin" ? "/admin" : "/profile"}
                             onClick={() => setMobileMenuOpen(false)}
                             className="p-3 bg-neutral-900/90 hover:bg-neutral-800/90 border border-neutral-800 hover:border-neutral-700 flex items-center justify-between transition-colors group block"
                         >
@@ -368,7 +370,7 @@ export default function Navbar() {
                                 {user.avatar ? (
                                     <img src={user.avatar} alt="" className="w-10 h-10 rounded-full object-cover border border-neutral-700" />
                                 ) : (
-                                    <div className="w-10 h-10 rounded-full bg-[#0F52BA] text-white flex items-center justify-center font-bold text-sm">
+                                    <div className={`w-10 h-10 rounded-full ${user.role === "admin" ? "bg-purple-700" : "bg-[#0F52BA]"} text-white flex items-center justify-center font-bold text-sm`}>
                                         {user.name.charAt(0)}
                                     </div>
                                 )}
@@ -379,7 +381,7 @@ export default function Navbar() {
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-neutral-800 group-hover:bg-[#0F52BA] text-neutral-300 group-hover:text-white rounded-sm transition-colors">
-                                    Profile →
+                                    {user.role === "admin" ? "Dashboard →" : "Profile →"}
                                 </span>
                             </div>
                         </Link>

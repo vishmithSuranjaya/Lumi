@@ -93,7 +93,11 @@ export default function AuthModal() {
 
                 login(data.user);
                 closeAuthModal();
-                router.refresh();
+                if (data.user?.role === "admin" && typeof window !== "undefined" && window.location.pathname.startsWith("/profile")) {
+                    router.push("/admin");
+                } else {
+                    router.refresh();
+                }
             } catch {
                 setErrorMessage("Network error. Please try again.");
             } finally {
