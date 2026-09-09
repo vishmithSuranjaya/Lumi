@@ -2,31 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import AdvertisementDetailModal, { AdminAdvertisement } from "@/components/admin/AdvertisementDetailModal";
 
-interface VehicleSubmission {
-  _id: string;
-  refId: string;
-  category: string;
-  brand: string;
-  model: string;
-  year: number;
-  condition: string;
-  mileage: string;
-  fuelType: string;
-  transmission: string;
-  priceLKR: number;
-  district: string;
-  city: string;
-  sellerName: string;
-  sellerPhone: string;
-  sellerEmail: string;
-  images: string[];
-  status: "pending" | "approved" | "rejected" | "active";
-  reviewedAt: string | null;
-  reviewedBy: string | null;
-  rejectionReason: string | null;
-  createdAt: string;
-}
+export type VehicleSubmission = AdminAdvertisement;
 
 interface StatsSummary {
   total: number;
@@ -48,6 +26,9 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "approved" | "rejected">("pending");
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+
+  // Detail Pop-up Modal State
+  const [selectedDetailAd, setSelectedDetailAd] = useState<VehicleSubmission | null>(null);
 
   // Reject Modal State
   const [rejectModal, setRejectModal] = useState<{
@@ -93,25 +74,38 @@ export default function AdminDashboardPage() {
     }, 4000);
   };
 
-  // Perform approve or reject action
+  // Perform approve, reject, or status action
   const handleUpdateStatus = async (
     id: string,
-    newStatus: "approved" | "rejected",
+    newStatus: string,
     reason?: string
   ) => {
-    // Optimistic UI update
+    // Optimistic UI update for submissions list
     setSubmissions((prev) =>
       prev.map((item) =>
         item._id === id
           ? {
               ...item,
-              status: newStatus,
+              status: newStatus as any,
               rejectionReason: newStatus === "rejected" ? reason || "Rejected by admin" : null,
               reviewedAt: new Date().toISOString(),
               reviewedBy: "LUMI Staff Admin",
             }
           : item
       )
+    );
+
+    // Also update currently viewed pop-up detail ad if open
+    setSelectedDetailAd((prev) =>
+      prev && prev._id === id
+        ? {
+            ...prev,
+            status: newStatus as any,
+            rejectionReason: newStatus === "rejected" ? reason || "Rejected by admin" : null,
+            reviewedAt: new Date().toISOString(),
+            reviewedBy: "LUMI Staff Admin",
+          }
+        : prev
     );
 
     try {
@@ -130,9 +124,11 @@ export default function AdminDashboardPage() {
         triggerToast(
           newStatus === "approved"
             ? "Vehicle advertisement approved and published live!"
-            : "Vehicle advertisement rejected."
+            : newStatus === "rejected"
+            ? "Vehicle advertisement rejected."
+            : `Vehicle advertisement status changed to '${newStatus}'.`
         );
-        // Refresh stats
+        // Refresh stats & list
         fetchSubmissions();
       } else {
         alert(resData.message || "Failed to update status");
@@ -362,18 +358,45 @@ export default function AdminDashboardPage() {
                 {filteredSubmissions.map((ad) => {
                   return (
                     <tr key={ad._id} className="hover:bg-neutral-800/40 transition-colors group">
-                      {/* Vehicle Spec */}
+                      {/* Vehicle Spec with Thumbnail & Click to View */}
                       <td className="py-4 px-6">
-                        <div>
-                          <div className="font-semibold text-white group-hover:text-blue-400 transition-colors">
-                            {ad.brand} {ad.model}
-                          </div>
-                          <div className="text-xs text-neutral-400 flex items-center gap-2 mt-0.5">
-                            <span className="font-mono text-neutral-300 font-bold">{ad.refId}</span>
-                            <span>•</span>
-                            <span>{ad.year}</span>
-                            <span>•</span>
-                            <span>{ad.condition}</span>
+                        <div
+                          className="flex items-center gap-3 cursor-pointer"
+                          onClick={() => setSelectedDetailAd(ad)}
+                          title="Click to view full details"
+                        >
+                          {ad.images && ad.images.length > 0 ? (
+                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-neutral-800 shrink-0 border border-neutral-700/60 relative group-hover:border-blue-500 transition-colors">
+                              <img
+                                src={ad.images[0]}
+                                alt=""
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                              />
+                              {ad.images.length > 1 && (
+                                <span className="absolute bottom-0.5 right-0.5 bg-black/80 text-[9px] font-mono text-white px-1 rounded">
+                                  +{ad.images.length - 1}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="w-12 h-12 rounded-xl bg-neutral-800 border border-neutral-700/60 flex items-center justify-center text-neutral-500 shrink-0">
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                            </div>
+                          )}
+
+                          <div>
+                            <div className="font-semibold text-white group-hover:text-blue-400 transition-colors flex items-center gap-1.5">
+                              <span>{ad.brand} {ad.model}</span>
+                            </div>
+                            <div className="text-xs text-neutral-400 flex items-center gap-2 mt-0.5">
+                              <span className="font-mono text-neutral-300 font-bold">{ad.refId}</span>
+                              <span>•</span>
+                              <span>{ad.year}</span>
+                              <span>•</span>
+                              <span>{ad.condition}</span>
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -420,11 +443,36 @@ export default function AdminDashboardPage() {
                             )}
                           </div>
                         )}
+                        {ad.status === "sold" && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                            Sold
+                          </span>
+                        )}
+                        {ad.status === "archived" && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral-700/30 text-neutral-400 border border-neutral-700/50">
+                            Archived
+                          </span>
+                        )}
                       </td>
 
                       {/* Actions */}
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-2">
+                          {/* View Details Pop-up Button */}
+                          <button
+                            type="button"
+                            onClick={() => setSelectedDetailAd(ad)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold border border-neutral-700/80 transition-all cursor-pointer shadow-xs hover:border-blue-500/50"
+                            title="Open full advertisement details in pop-up"
+                          >
+                            <svg className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <span className="hidden sm:inline">Details</span>
+                          </button>
+
                           {ad.status === "pending" ? (
                             <>
                               <button
@@ -445,14 +493,14 @@ export default function AdminDashboardPage() {
                               onClick={() => openRejectModal(ad)}
                               className="text-xs text-neutral-400 hover:text-rose-400 underline underline-offset-2 cursor-pointer font-medium"
                             >
-                              Revoke / Reject
+                              Revoke
                             </button>
                           ) : (
                             <button
                               onClick={() => handleUpdateStatus(ad._id, "approved")}
                               className="text-xs text-neutral-400 hover:text-emerald-400 underline underline-offset-2 cursor-pointer font-medium"
                             >
-                              Approve Listing
+                              Approve
                             </button>
                           )}
                         </div>
@@ -547,6 +595,14 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       )}
+
+      {/* 5. Separate Advertisement Detail Pop-up Modal */}
+      <AdvertisementDetailModal
+        isOpen={Boolean(selectedDetailAd)}
+        ad={selectedDetailAd}
+        onClose={() => setSelectedDetailAd(null)}
+        onStatusChange={(id, newStatus, reason) => handleUpdateStatus(id, newStatus, reason)}
+      />
     </div>
   );
 }

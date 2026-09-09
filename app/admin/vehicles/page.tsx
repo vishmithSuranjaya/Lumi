@@ -3,28 +3,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { VEHICLE_CATEGORIES, SRI_LANKA_DISTRICTS } from "@/lib/validations/advertisement";
+import AdvertisementDetailModal, { AdminAdvertisement } from "@/components/admin/AdvertisementDetailModal";
 
-interface FleetVehicle {
-  _id: string;
-  refId: string;
-  category: string;
-  brand: string;
-  model: string;
-  year: number;
-  condition: string;
-  mileage: string;
-  fuelType: string;
-  transmission: string;
-  priceLKR: number;
-  district: string;
-  city: string;
-  sellerName: string;
-  sellerPhone: string;
-  sellerEmail: string;
-  images: string[];
-  status: "pending" | "approved" | "rejected" | "active" | "sold" | "archived";
-  createdAt: string;
-}
+export type FleetVehicle = AdminAdvertisement;
 
 export default function AdminVehicleFleetPage() {
   const [vehicles, setVehicles] = useState<FleetVehicle[]>([]);
@@ -35,6 +16,9 @@ export default function AdminVehicleFleetPage() {
   const [selectedDistrict, setSelectedDistrict] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Detail Pop-up Modal State
+  const [selectedDetailVehicle, setSelectedDetailVehicle] = useState<FleetVehicle | null>(null);
 
   // Delete Modal State
   const [deleteModal, setDeleteModal] = useState<{
@@ -74,6 +58,10 @@ export default function AdminVehicleFleetPage() {
     // Optimistic UI update
     setVehicles((prev) =>
       prev.map((v) => (v._id === id ? { ...v, status: newStatus as any } : v))
+    );
+
+    setSelectedDetailVehicle((prev) =>
+      prev && prev._id === id ? { ...prev, status: newStatus as any } : prev
     );
 
     try {
@@ -415,18 +403,45 @@ export default function AdminVehicleFleetPage() {
                 {filteredVehicles.map((vehicle) => {
                   return (
                     <tr key={vehicle._id} className="hover:bg-neutral-800/40 transition-colors group">
-                      {/* Vehicle Spec */}
+                      {/* Vehicle Spec with Thumbnail & Click to View */}
                       <td className="py-4 px-6">
-                        <div>
-                          <div className="font-bold text-white group-hover:text-blue-400 transition-colors">
-                            {vehicle.brand} {vehicle.model}
-                          </div>
-                          <div className="text-xs text-neutral-400 flex items-center gap-2 mt-0.5 font-mono">
-                            <span className="text-neutral-300 font-bold">{vehicle.refId}</span>
-                            <span>•</span>
-                            <span>{vehicle.year}</span>
-                            <span>•</span>
-                            <span className="font-sans">{vehicle.condition}</span>
+                        <div
+                          className="flex items-center gap-3 cursor-pointer"
+                          onClick={() => setSelectedDetailVehicle(vehicle)}
+                          title="Click to view full vehicle details"
+                        >
+                          {vehicle.images && vehicle.images.length > 0 ? (
+                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-neutral-800 shrink-0 border border-neutral-700/60 relative group-hover:border-blue-500 transition-colors">
+                              <img
+                                src={vehicle.images[0]}
+                                alt=""
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                              />
+                              {vehicle.images.length > 1 && (
+                                <span className="absolute bottom-0.5 right-0.5 bg-black/80 text-[9px] font-mono text-white px-1 rounded">
+                                  +{vehicle.images.length - 1}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="w-12 h-12 rounded-xl bg-neutral-800 border border-neutral-700/60 flex items-center justify-center text-neutral-500 shrink-0">
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                            </div>
+                          )}
+
+                          <div>
+                            <div className="font-bold text-white group-hover:text-blue-400 transition-colors">
+                              {vehicle.brand} {vehicle.model}
+                            </div>
+                            <div className="text-xs text-neutral-400 flex items-center gap-2 mt-0.5 font-mono">
+                              <span className="text-neutral-300 font-bold">{vehicle.refId}</span>
+                              <span>•</span>
+                              <span>{vehicle.year}</span>
+                              <span>•</span>
+                              <span className="font-sans">{vehicle.condition}</span>
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -493,6 +508,20 @@ export default function AdminVehicleFleetPage() {
                       {/* Actions */}
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-2">
+                          {/* Details Button */}
+                          <button
+                            type="button"
+                            onClick={() => setSelectedDetailVehicle(vehicle)}
+                            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold border border-neutral-700/80 transition-all cursor-pointer shadow-xs hover:border-blue-500/50"
+                            title="Open full vehicle details in pop-up"
+                          >
+                            <svg className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <span className="hidden sm:inline">Details</span>
+                          </button>
+
                           {/* Quick Status Select */}
                           <select
                             value={vehicle.status}
@@ -592,6 +621,18 @@ export default function AdminVehicleFleetPage() {
           </div>
         </div>
       )}
+
+      {/* 6. Separate Advertisement Detail Pop-up Modal */}
+      <AdvertisementDetailModal
+        isOpen={Boolean(selectedDetailVehicle)}
+        ad={selectedDetailVehicle}
+        onClose={() => setSelectedDetailVehicle(null)}
+        onStatusChange={(id, newStatus) => handleStatusChange(id, newStatus)}
+        onDelete={(v) => {
+          setSelectedDetailVehicle(null);
+          setDeleteModal({ isOpen: true, vehicle: v });
+        }}
+      />
     </div>
   );
 }
