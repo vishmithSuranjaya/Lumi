@@ -14,6 +14,13 @@ export async function GET() {
             );
         }
 
+        if (session.role === "admin") {
+            return NextResponse.json(
+                { success: false, message: "Admin accounts do not have a user profile." },
+                { status: 403 }
+            );
+        }
+
         const client = await clientPromise;
         const db = client.db("myfirstapp");
 
@@ -90,6 +97,13 @@ export async function PUT(request: Request) {
             return NextResponse.json(
                 { success: false, message: "Authentication required." },
                 { status: 401 }
+            );
+        }
+
+        if (session.role === "admin") {
+            return NextResponse.json(
+                { success: false, message: "Admin accounts do not have a user profile." },
+                { status: 403 }
             );
         }
 

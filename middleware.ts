@@ -26,13 +26,17 @@ export async function middleware(request: NextRequest) {
     const isProfileRoute = pathname.startsWith("/profile");
     const isAuthPage = pathname === "/signin" || pathname === "/signup";
 
-    // Protect Profile routes (users must be logged in)
+    // Protect Profile routes (users must be logged in; admin accounts do not use a user profile)
     if (isProfileRoute) {
         if (!session) {
             const redirectUrl = new URL("/signin", request.url);
             redirectUrl.searchParams.set("redirect", pathname);
             redirectUrl.searchParams.set("error", "auth_required");
             return NextResponse.redirect(redirectUrl);
+        }
+
+        if (session.role === "admin") {
+            return NextResponse.redirect(new URL("/admin", request.url));
         }
     }
 
@@ -56,11 +60,14 @@ export async function middleware(request: NextRequest) {
     // Redirect already authenticated users away from signin/signup
     if (isAuthPage && session) {
         const redirectParam = request.nextUrl.searchParams.get("redirect");
-        if (redirectParam && redirectParam.startsWith("/")) {
-            return NextResponse.redirect(new URL(redirectParam, request.url));
-        }
         if (session.role === "admin") {
+            if (redirectParam && redirectParam.startsWith("/admin")) {
+                return NextResponse.redirect(new URL(redirectParam, request.url));
+            }
             return NextResponse.redirect(new URL("/admin", request.url));
+        }
+        if (redirectParam && redirectParam.startsWith("/") && !redirectParam.startsWith("/admin")) {
+            return NextResponse.redirect(new URL(redirectParam, request.url));
         }
         return NextResponse.redirect(new URL("/", request.url));
     }

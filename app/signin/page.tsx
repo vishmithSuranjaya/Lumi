@@ -80,8 +80,12 @@ function SignInContent() {
             login(data.user);
 
             // Redirect appropriately
-            if (data.user.role === "admin" && (redirectTarget.startsWith("/admin") || redirectTarget === "/")) {
-                router.push("/admin");
+            if (data.user.role === "admin") {
+                if (redirectTarget.startsWith("/admin")) {
+                    router.push(redirectTarget);
+                } else {
+                    router.push("/admin");
+                }
             } else {
                 router.push(redirectTarget);
             }

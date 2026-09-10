@@ -28,9 +28,8 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
 
         {/* Search Bar */}
         <div
-          className={`relative w-full transition-all duration-200 ${
-            searchFocused ? "ring-2 ring-blue-500/50" : ""
-          } rounded-xl bg-neutral-900 border border-neutral-800/90`}
+          className={`relative w-full transition-all duration-200 ${searchFocused ? "ring-2 ring-blue-500/50" : ""
+            } rounded-xl bg-neutral-900 border border-neutral-800/90`}
         >
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,14 +53,7 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
 
       {/* Right: Status Pill, Notifications & Quick Actions */}
       <div className="flex items-center gap-3 sm:gap-4 ml-4">
-        {/* System Online Status */}
-        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span>Database Live</span>
-        </div>
+
 
         {/* Notification Bell Dropdown */}
         <div className="relative">

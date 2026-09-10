@@ -89,12 +89,14 @@ function ProfilePageContent() {
     useEffect(() => {
         if (!authLoading && !user && !isSigningOut) {
             router.push("/signin?redirect=/profile&error=auth_required");
+        } else if (!authLoading && user && user.role === "admin") {
+            router.replace("/admin");
         }
     }, [user, authLoading, router, isSigningOut]);
 
     // Populate initial profile fields from auth context
     useEffect(() => {
-        if (user) {
+        if (user && user.role !== "admin") {
             setName(user.name || "");
             setPhone(user.phone || "");
             setAvatar(user.avatar || "");
@@ -103,7 +105,7 @@ function ProfilePageContent() {
 
     // Fetch user profile stats and advertisements
     const fetchUserData = async () => {
-        if (!user) return;
+        if (!user || user.role === "admin") return;
 
         try {
             // Fetch stats and latest profile details
@@ -135,7 +137,7 @@ function ProfilePageContent() {
     };
 
     useEffect(() => {
-        if (user) {
+        if (user && user.role !== "admin") {
             fetchUserData();
         }
     }, [user]);
@@ -380,15 +382,15 @@ function ProfilePageContent() {
         }
     };
 
-    // If waiting for auth state or redirecting
-    if (authLoading || !user) {
+    // If waiting for auth state or redirecting admin to dashboard
+    if (authLoading || !user || user.role === "admin") {
         return (
             <div className="min-h-screen bg-[#0d1117] flex flex-col justify-between text-white">
                 <Navbar />
                 <div className="flex-1 flex flex-col items-center justify-center p-6">
                     <div className="w-16 h-16 border-4 border-[#0F52BA]/20 border-t-[#0F52BA] rounded-full animate-spin mb-4" />
                     <p className="text-sm font-semibold tracking-widest uppercase text-neutral-400">
-                        Verifying LUMI Credentials...
+                        {user?.role === "admin" ? "Redirecting to Admin Dashboard..." : "Verifying LUMI Credentials..."}
                     </p>
                 </div>
                 <Footer />
@@ -420,17 +422,6 @@ function ProfilePageContent() {
                                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                                     Account Active
                                 </span>
-                                {user.role === "admin" && (
-                                    <Link
-                                        href="/admin"
-                                        className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/40 text-purple-200 text-xs font-bold tracking-wider uppercase transition-colors"
-                                    >
-                                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                        </svg>
-                                        Admin Dashboard
-                                    </Link>
-                                )}
                             </div>
                         </div>
 
@@ -484,7 +475,7 @@ function ProfilePageContent() {
                                             {user.name}
                                         </h1>
                                         <span className="px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-widest bg-[#0F52BA] text-white">
-                                            {user.role === "admin" ? "LUMI Admin" : "Verified Member"}
+                                            Verified Member
                                         </span>
                                     </div>
                                     <p className="text-neutral-400 text-sm mt-1">{user.email}</p>
