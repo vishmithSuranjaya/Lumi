@@ -4,6 +4,7 @@ import HomeAdSlider from "@/components/HomeAdSlider";
 import Navbar from "@/components/Navbar";
 import VehicleCategoryGrid from "@/components/VehicleCategoryGrid";
 import VehicleLogoSlider from "@/components/VehicleLogoSlider";
+import SellVehicleCta from "@/components/SellVehicleCta";
 import Image from "next/image";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
       <HeroSection />
       <VehicleCategoryGrid />
       <VehicleLogoSlider />
+      <SellVehicleCta />
       <HomeAdSlider />
       <Footer />
     </div>
