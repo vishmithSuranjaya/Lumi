@@ -169,24 +169,24 @@ export default function AdminVehicleFleetPage() {
     <div className="space-y-8 pb-12">
       {/* Toast Feedback */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 border border-emerald-500/50 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-bottom-5">
+        <div className="fixed bottom-6 right-6 z-50 bg-white border border-emerald-200 text-gray-800 px-5 py-3.5 rounded-xl shadow-xl flex items-center gap-3 animate-in slide-in-from-bottom-5">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
           <span className="text-xs font-bold tracking-wide">{toastMessage}</span>
         </div>
       )}
 
       {/* 1. Header & Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-800/80 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-6">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
               Vehicle Fleet Management
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200">
               Total: {vehicles.length} Units
             </span>
           </div>
-          <p className="text-sm text-neutral-400 mt-1">
+          <p className="text-sm text-gray-500 mt-1">
             Complete inventory catalog controls, listing status moderation, and vehicle portfolio valuation.
           </p>
         </div>
@@ -194,10 +194,10 @@ export default function AdminVehicleFleetPage() {
         <div className="flex items-center gap-2.5 self-start sm:self-auto">
           <button
             onClick={fetchFleet}
-            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-300 text-xs font-bold transition-all cursor-pointer"
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white hover:bg-gray-50 border border-gray-200 text-gray-600 text-xs font-bold transition-all cursor-pointer shadow-sm"
           >
             <svg
-              className={`w-3.5 h-3.5 ${loading ? "animate-spin text-blue-400" : "text-neutral-400"}`}
+              className={`w-3.5 h-3.5 ${loading ? "animate-spin text-blue-500" : "text-gray-400"}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -222,67 +222,67 @@ export default function AdminVehicleFleetPage() {
       {/* 2. KPI Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Registered Units */}
-        <div className="p-5 rounded-2xl bg-neutral-900/90 border border-neutral-800/80 shadow-md">
-          <div className="flex items-center justify-between text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider">
             <span>Total Registered</span>
-            <span className="text-blue-400 font-mono text-sm">🚗</span>
+            <span className="text-blue-500 font-mono text-sm">🚗</span>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white">{vehicles.length}</span>
-            <span className="text-xs text-neutral-400">Total Listings</span>
+            <span className="text-3xl font-extrabold text-gray-900">{vehicles.length}</span>
+            <span className="text-xs text-gray-400">Total Listings</span>
           </div>
         </div>
 
         {/* Live in Catalog */}
-        <div className="p-5 rounded-2xl bg-neutral-900/90 border border-neutral-800/80 shadow-md">
-          <div className="flex items-center justify-between text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider">
             <span>Live in Catalog</span>
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white">{liveCount}</span>
-            <span className="text-xs font-semibold text-emerald-400">Active</span>
+            <span className="text-3xl font-extrabold text-gray-900">{liveCount}</span>
+            <span className="text-xs font-semibold text-emerald-600">Active</span>
           </div>
         </div>
 
         {/* Total Active Valuation */}
-        <div className="p-5 rounded-2xl bg-neutral-900/90 border border-neutral-800/80 shadow-md">
-          <div className="flex items-center justify-between text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider">
             <span>Live Fleet Value</span>
-            <span className="text-emerald-400 font-mono font-bold text-xs">LKR</span>
+            <span className="text-emerald-600 font-mono font-bold text-xs">LKR</span>
           </div>
           <div className="mt-3 flex items-baseline gap-1.5">
-            <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+            <span className="text-2xl sm:text-3xl font-extrabold text-gray-900 font-mono">
               {totalFleetValuation >= 1000000000
                 ? `${(totalFleetValuation / 1000000000).toFixed(2)}B`
                 : `${(totalFleetValuation / 1000000).toFixed(1)}M`}
             </span>
-            <span className="text-xs text-neutral-400 font-semibold">LKR</span>
+            <span className="text-xs text-gray-400 font-semibold">LKR</span>
           </div>
         </div>
 
         {/* Under Review / Sold */}
-        <div className="p-5 rounded-2xl bg-neutral-900/90 border border-neutral-800/80 shadow-md">
-          <div className="flex items-center justify-between text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider">
             <span>Pending & Sold</span>
-            <span className="text-amber-400 font-mono text-sm">⏳</span>
+            <span className="text-amber-500 font-mono text-sm">⏳</span>
           </div>
           <div className="mt-3 flex items-center gap-3">
             <div>
-              <span className="text-2xl font-extrabold text-amber-400">{pendingCount}</span>
-              <span className="text-[11px] text-neutral-400 block">Pending</span>
+              <span className="text-2xl font-extrabold text-amber-500">{pendingCount}</span>
+              <span className="text-[11px] text-gray-400 block">Pending</span>
             </div>
-            <div className="w-px h-8 bg-neutral-800" />
+            <div className="w-px h-8 bg-gray-200" />
             <div>
-              <span className="text-2xl font-extrabold text-indigo-400">{soldCount}</span>
-              <span className="text-[11px] text-neutral-400 block">Sold</span>
+              <span className="text-2xl font-extrabold text-indigo-500">{soldCount}</span>
+              <span className="text-[11px] text-gray-400 block">Sold</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* 3. Search & Filter Toolbar */}
-      <div className="bg-neutral-900/90 border border-neutral-800/80 rounded-2xl p-4 sm:p-5 shadow-lg space-y-3">
+      <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {/* Search Box */}
           <div className="lg:col-span-2 relative">
@@ -291,12 +291,12 @@ export default function AdminVehicleFleetPage() {
               placeholder="Search by brand, model, ref ID, seller..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-700/80 rounded-xl px-4 py-2.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-2.5 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white text-xs font-bold"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 text-xs font-bold"
               >
                 ✕
               </button>
@@ -308,7 +308,7 @@ export default function AdminVehicleFleetPage() {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-700/80 rounded-xl px-3 py-2.5 text-xs text-neutral-200 focus:outline-none focus:border-blue-500 cursor-pointer"
+              className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="all">All Statuses</option>
               <option value="live">Live in Catalog</option>
@@ -324,7 +324,7 @@ export default function AdminVehicleFleetPage() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-700/80 rounded-xl px-3 py-2.5 text-xs text-neutral-200 focus:outline-none focus:border-blue-500 cursor-pointer"
+              className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="all">All Categories</option>
               {VEHICLE_CATEGORIES.map((cat) => (
@@ -340,7 +340,7 @@ export default function AdminVehicleFleetPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-700/80 rounded-xl px-3 py-2.5 text-xs text-neutral-200 focus:outline-none focus:border-blue-500 cursor-pointer"
+              className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="newest">Recently Listed</option>
               <option value="price-desc">Price: High to Low</option>
@@ -353,9 +353,9 @@ export default function AdminVehicleFleetPage() {
 
         {/* Quick Filter Reset */}
         {(searchQuery || selectedStatus !== "all" || selectedCategory !== "all" || selectedDistrict !== "all") && (
-          <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-xs">
-            <span className="text-neutral-400">
-              Showing <strong className="text-white">{filteredVehicles.length}</strong> matching vehicles
+          <div className="flex items-center justify-between pt-2 border-t border-gray-200 text-xs">
+            <span className="text-gray-400">
+              Showing <strong className="text-gray-900">{filteredVehicles.length}</strong> matching vehicles
             </span>
             <button
               onClick={() => {
@@ -364,7 +364,7 @@ export default function AdminVehicleFleetPage() {
                 setSelectedCategory("all");
                 setSelectedDistrict("all");
               }}
-              className="text-blue-400 hover:text-blue-300 font-bold cursor-pointer"
+              className="text-blue-600 hover:text-blue-500 font-bold cursor-pointer"
             >
               Reset Filters
             </button>
@@ -373,16 +373,16 @@ export default function AdminVehicleFleetPage() {
       </div>
 
       {/* 4. Vehicles Table */}
-      <div className="bg-neutral-900/90 border border-neutral-800/80 rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
         {loading ? (
-          <div className="py-24 text-center text-neutral-400 text-sm">
+          <div className="py-24 text-center text-gray-400 text-sm">
             <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
             Loading vehicle fleet inventory...
           </div>
         ) : filteredVehicles.length === 0 ? (
-          <div className="py-20 text-center text-neutral-400 text-sm">
-            <p className="font-semibold text-neutral-200 text-base">No vehicles found</p>
-            <p className="text-xs text-neutral-500 mt-1">
+          <div className="py-20 text-center text-gray-400 text-sm">
+            <p className="font-semibold text-gray-600 text-base">No vehicles found</p>
+            <p className="text-xs text-gray-400 mt-1">
               Try adjusting your search criteria or post a new vehicle to the fleet.
             </p>
           </div>
@@ -390,7 +390,7 @@ export default function AdminVehicleFleetPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-neutral-800/80 bg-neutral-950/50 text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+                <tr className="border-b border-gray-200 bg-gray-50 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
                   <th className="py-3.5 px-6">Vehicle</th>
                   <th className="py-3.5 px-6">Transmission / Fuel</th>
                   <th className="py-3.5 px-6">Seller Contact</th>
@@ -399,10 +399,10 @@ export default function AdminVehicleFleetPage() {
                   <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-800/60 text-sm">
+              <tbody className="divide-y divide-gray-100 text-sm">
                 {filteredVehicles.map((vehicle) => {
                   return (
-                    <tr key={vehicle._id} className="hover:bg-neutral-800/40 transition-colors group">
+                    <tr key={vehicle._id} className="hover:bg-gray-50 transition-colors group">
                       {/* Vehicle Spec with Thumbnail & Click to View */}
                       <td className="py-4 px-6">
                         <div
@@ -411,20 +411,20 @@ export default function AdminVehicleFleetPage() {
                           title="Click to view full vehicle details"
                         >
                           {vehicle.images && vehicle.images.length > 0 ? (
-                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-neutral-800 shrink-0 border border-neutral-700/60 relative group-hover:border-blue-500 transition-colors">
+                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-200 relative group-hover:border-blue-400 transition-colors">
                               <img
                                 src={vehicle.images[0]}
                                 alt=""
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                               />
                               {vehicle.images.length > 1 && (
-                                <span className="absolute bottom-0.5 right-0.5 bg-black/80 text-[9px] font-mono text-white px-1 rounded">
+                                <span className="absolute bottom-0.5 right-0.5 bg-black/70 text-[9px] font-mono text-white px-1 rounded">
                                   +{vehicle.images.length - 1}
                                 </span>
                               )}
                             </div>
                           ) : (
-                            <div className="w-12 h-12 rounded-xl bg-neutral-800 border border-neutral-700/60 flex items-center justify-center text-neutral-500 shrink-0">
+                            <div className="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 shrink-0">
                               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                               </svg>
@@ -432,11 +432,11 @@ export default function AdminVehicleFleetPage() {
                           )}
 
                           <div>
-                            <div className="font-bold text-white group-hover:text-blue-400 transition-colors">
+                            <div className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
                               {vehicle.brand} {vehicle.model}
                             </div>
-                            <div className="text-xs text-neutral-400 flex items-center gap-2 mt-0.5 font-mono">
-                              <span className="text-neutral-300 font-bold">{vehicle.refId}</span>
+                            <div className="text-xs text-gray-400 flex items-center gap-2 mt-0.5 font-mono">
+                              <span className="text-gray-600 font-bold">{vehicle.refId}</span>
                               <span>•</span>
                               <span>{vehicle.year}</span>
                               <span>•</span>
@@ -447,12 +447,12 @@ export default function AdminVehicleFleetPage() {
                       </td>
 
                       {/* Transmission & Fuel */}
-                      <td className="py-4 px-6 text-xs text-neutral-300">
+                      <td className="py-4 px-6 text-xs text-gray-600">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="px-2 py-0.5 rounded bg-neutral-800 text-neutral-300 border border-neutral-700/50 font-medium">
+                          <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-200 font-medium">
                             {vehicle.transmission}
                           </span>
-                          <span className="px-2 py-0.5 rounded bg-neutral-800 text-neutral-300 border border-neutral-700/50 font-medium">
+                          <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-200 font-medium">
                             {vehicle.fuelType}
                           </span>
                         </div>
@@ -460,8 +460,8 @@ export default function AdminVehicleFleetPage() {
 
                       {/* Seller Contact */}
                       <td className="py-4 px-6">
-                        <div className="text-sm font-semibold text-neutral-200">{vehicle.sellerName}</div>
-                        <div className="text-xs text-neutral-400 flex items-center gap-2 mt-0.5">
+                        <div className="text-sm font-semibold text-gray-700">{vehicle.sellerName}</div>
+                        <div className="text-xs text-gray-400 flex items-center gap-2 mt-0.5">
                           <span>{vehicle.sellerPhone}</span>
                           <span>•</span>
                           <span>{vehicle.district}</span>
@@ -469,37 +469,37 @@ export default function AdminVehicleFleetPage() {
                       </td>
 
                       {/* Listed Price */}
-                      <td className="py-4 px-6 font-bold text-white font-mono">
+                      <td className="py-4 px-6 font-bold text-gray-900 font-mono">
                         LKR {vehicle.priceLKR?.toLocaleString() || "0"}
                       </td>
 
                       {/* Status Badge */}
                       <td className="py-4 px-6">
                         {(vehicle.status === "approved" || vehicle.status === "active") && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                             Live in Catalog
                           </span>
                         )}
                         {vehicle.status === "pending" && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                             Pending Review
                           </span>
                         )}
                         {vehicle.status === "sold" && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-600 border border-indigo-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
                             Sold
                           </span>
                         )}
                         {vehicle.status === "archived" && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral-700/30 text-neutral-400 border border-neutral-700/50">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-500 border border-gray-200">
                             Archived
                           </span>
                         )}
                         {vehicle.status === "rejected" && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-600 border border-rose-200">
                             Rejected
                           </span>
                         )}
@@ -512,10 +512,10 @@ export default function AdminVehicleFleetPage() {
                           <button
                             type="button"
                             onClick={() => setSelectedDetailVehicle(vehicle)}
-                            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold border border-neutral-700/80 transition-all cursor-pointer shadow-xs hover:border-blue-500/50"
+                            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold border border-gray-200 transition-all cursor-pointer shadow-xs hover:border-blue-300"
                             title="Open full vehicle details in pop-up"
                           >
-                            <svg className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-3.5 h-3.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
@@ -526,7 +526,7 @@ export default function AdminVehicleFleetPage() {
                           <select
                             value={vehicle.status}
                             onChange={(e) => handleStatusChange(vehicle._id, e.target.value)}
-                            className="bg-neutral-950 border border-neutral-700 rounded-lg px-2.5 py-1 text-xs text-neutral-300 focus:outline-none focus:border-blue-500 cursor-pointer font-medium"
+                            className="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 text-xs text-gray-600 focus:outline-none focus:border-blue-500 cursor-pointer font-medium"
                           >
                             <option value="approved">Set Live</option>
                             <option value="sold">Mark as Sold</option>
@@ -538,7 +538,7 @@ export default function AdminVehicleFleetPage() {
                           {/* Delete Button */}
                           <button
                             onClick={() => setDeleteModal({ isOpen: true, vehicle })}
-                            className="p-1.5 rounded-lg bg-neutral-800 hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg bg-gray-100 hover:bg-rose-50 text-gray-400 hover:text-rose-500 transition-colors cursor-pointer"
                             title="Delete listing"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -556,15 +556,15 @@ export default function AdminVehicleFleetPage() {
         )}
 
         {/* Footer */}
-        <div className="p-4 border-t border-neutral-800/80 bg-neutral-950/40 flex items-center justify-between text-xs text-neutral-400">
+        <div className="p-4 border-t border-gray-200 bg-gray-50/50 flex items-center justify-between text-xs text-gray-500">
           <span>
-            Showing <strong className="text-white">{filteredVehicles.length}</strong> of{" "}
-            <strong className="text-white">{vehicles.length}</strong> total fleet entries
+            Showing <strong className="text-gray-900">{filteredVehicles.length}</strong> of{" "}
+            <strong className="text-gray-900">{vehicles.length}</strong> total fleet entries
           </span>
           <Link
             href="/vehicles"
             target="_blank"
-            className="text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1"
+            className="text-blue-600 hover:text-blue-500 font-bold flex items-center gap-1"
           >
             <span>Open Public Vehicle Catalog</span>
             <span>→</span>
@@ -574,30 +574,30 @@ export default function AdminVehicleFleetPage() {
 
       {/* 5. Delete Confirmation Modal */}
       {deleteModal.isOpen && deleteModal.vehicle && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
-              <h3 className="font-bold text-white text-base">Delete Vehicle Listing</h3>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+              <h3 className="font-bold text-gray-900 text-base">Delete Vehicle Listing</h3>
               <button
                 onClick={() => setDeleteModal({ isOpen: false, vehicle: null })}
-                className="text-neutral-400 hover:text-white text-lg font-bold"
+                className="text-gray-400 hover:text-gray-700 text-lg font-bold"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-neutral-300">
+            <p className="text-xs text-gray-600">
               Are you sure you want to permanently delete this listing from the database? This action cannot be undone.
             </p>
 
-            <div className="p-3 bg-neutral-950 border border-neutral-800 rounded-xl space-y-1">
-              <div className="text-xs text-neutral-400 font-mono font-bold">
+            <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-1">
+              <div className="text-xs text-gray-400 font-mono font-bold">
                 {deleteModal.vehicle.refId}
               </div>
-              <div className="text-sm font-bold text-white">
+              <div className="text-sm font-bold text-gray-900">
                 {deleteModal.vehicle.brand} {deleteModal.vehicle.model} ({deleteModal.vehicle.year})
               </div>
-              <div className="text-xs text-neutral-400">
+              <div className="text-xs text-gray-400">
                 Seller: {deleteModal.vehicle.sellerName} • LKR {deleteModal.vehicle.priceLKR?.toLocaleString()}
               </div>
             </div>
@@ -606,7 +606,7 @@ export default function AdminVehicleFleetPage() {
               <button
                 type="button"
                 onClick={() => setDeleteModal({ isOpen: false, vehicle: null })}
-                className="px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold cursor-pointer"
+                className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold cursor-pointer"
               >
                 Cancel
               </button>

@@ -167,12 +167,12 @@ export default function AdminDashboardPage() {
     <div className="space-y-8 pb-12">
       {/* Toast Notification */}
       {actionMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 border border-emerald-500/50 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-bottom-5">
+        <div className="fixed bottom-6 right-6 z-50 bg-white border border-emerald-200 text-gray-800 px-5 py-3.5 rounded-xl shadow-xl flex items-center gap-3 animate-in slide-in-from-bottom-5">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
           <span className="text-xs font-bold tracking-wide">{actionMessage}</span>
           <button
             onClick={() => setActionMessage(null)}
-            className="text-neutral-400 hover:text-white ml-2 text-sm font-bold"
+            className="text-gray-400 hover:text-gray-700 ml-2 text-sm font-bold"
           >
             ✕
           </button>
@@ -180,26 +180,26 @@ export default function AdminDashboardPage() {
       )}
 
       {/* 1. Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-800/80 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-6">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
               Advertisement Moderation
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200">
               Live Approval Queue
             </span>
           </div>
-          <p className="text-sm text-neutral-400 mt-1">
+          <p className="text-sm text-gray-500 mt-1">
             Review user-submitted vehicle advertisements before they are published to the public marketplace.
           </p>
         </div>
 
         <button
           onClick={fetchSubmissions}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-200 text-xs font-bold transition-all cursor-pointer self-start sm:self-auto"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold transition-all cursor-pointer self-start sm:self-auto shadow-sm"
         >
-          <svg className={`w-3.5 h-3.5 ${loading ? "animate-spin text-blue-400" : "text-neutral-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className={`w-3.5 h-3.5 ${loading ? "animate-spin text-blue-500" : "text-gray-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
           <span>Refresh Data</span>
@@ -209,106 +209,106 @@ export default function AdminDashboardPage() {
       {/* 2. Top KPI Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Card 1: Pending Ad Queue */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-neutral-900/90 border border-neutral-800/80 shadow-lg relative overflow-hidden group hover:border-amber-500/40 transition-all">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-all pointer-events-none" />
+        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-gray-200 shadow-sm relative overflow-hidden group hover:border-amber-300 hover:shadow-md transition-all">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-full blur-2xl group-hover:bg-amber-100 transition-all pointer-events-none" />
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">Pending Review</span>
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <span className="text-xs font-medium uppercase tracking-wider text-gray-500">Pending Review</span>
+            <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-500">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
           <div className="mt-4 flex items-baseline gap-3">
-            <span className="text-3xl font-extrabold text-white">{stats.pending}</span>
+            <span className="text-3xl font-extrabold text-gray-900">{stats.pending}</span>
             {stats.pending > 0 ? (
-              <span className="text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 animate-pulse">
+              <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 animate-pulse">
                 Action Required
               </span>
             ) : (
-              <span className="text-xs font-semibold text-emerald-400">Queue Cleared</span>
+              <span className="text-xs font-semibold text-emerald-600">Queue Cleared</span>
             )}
           </div>
-          <p className="text-xs text-neutral-400 mt-1">Requires admin approval to go live</p>
+          <p className="text-xs text-gray-400 mt-1">Requires admin approval to go live</p>
         </div>
 
         {/* Card 2: Total Live Fleet */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-neutral-900/90 border border-neutral-800/80 shadow-lg relative overflow-hidden group hover:border-neutral-700 transition-all">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all pointer-events-none" />
+        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-gray-200 shadow-sm relative overflow-hidden group hover:border-gray-300 hover:shadow-md transition-all">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-2xl group-hover:bg-emerald-100 transition-all pointer-events-none" />
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">Live in Catalog</span>
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <span className="text-xs font-medium uppercase tracking-wider text-gray-500">Live in Catalog</span>
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-500">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
           <div className="mt-4 flex items-baseline gap-3">
-            <span className="text-3xl font-extrabold text-white">{stats.approved}</span>
-            <span className="text-xs font-semibold text-emerald-400">Approved & Active</span>
+            <span className="text-3xl font-extrabold text-gray-900">{stats.approved}</span>
+            <span className="text-xs font-semibold text-emerald-600">Approved & Active</span>
           </div>
-          <p className="text-xs text-neutral-400 mt-1">Visible to all marketplace buyers</p>
+          <p className="text-xs text-gray-400 mt-1">Visible to all marketplace buyers</p>
         </div>
 
         {/* Card 3: Rejected Listings */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-neutral-900/90 border border-neutral-800/80 shadow-lg relative overflow-hidden group hover:border-neutral-700 transition-all">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full blur-2xl group-hover:bg-rose-500/10 transition-all pointer-events-none" />
+        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-gray-200 shadow-sm relative overflow-hidden group hover:border-gray-300 hover:shadow-md transition-all">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-full blur-2xl group-hover:bg-rose-100 transition-all pointer-events-none" />
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">Rejected Listings</span>
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+            <span className="text-xs font-medium uppercase tracking-wider text-gray-500">Rejected Listings</span>
+            <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-500">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
               </svg>
             </div>
           </div>
           <div className="mt-4 flex items-baseline gap-3">
-            <span className="text-3xl font-extrabold text-white">{stats.rejected}</span>
-            <span className="text-xs font-semibold text-rose-400">Flagged</span>
+            <span className="text-3xl font-extrabold text-gray-900">{stats.rejected}</span>
+            <span className="text-xs font-semibold text-rose-500">Flagged</span>
           </div>
-          <p className="text-xs text-neutral-400 mt-1">Violated rules or invalid information</p>
+          <p className="text-xs text-gray-400 mt-1">Violated rules or invalid information</p>
         </div>
 
         {/* Card 4: Inventory Valuation */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-neutral-900/90 border border-neutral-800/80 shadow-lg relative overflow-hidden group hover:border-neutral-700 transition-all">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl group-hover:bg-blue-500/10 transition-all pointer-events-none" />
+        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-gray-200 shadow-sm relative overflow-hidden group hover:border-gray-300 hover:shadow-md transition-all">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl group-hover:bg-blue-100 transition-all pointer-events-none" />
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">Live Inventory Value</span>
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold font-mono">
+            <span className="text-xs font-medium uppercase tracking-wider text-gray-500">Live Inventory Value</span>
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-500 font-bold font-mono">
               Rs.
             </div>
           </div>
           <div className="mt-4 flex items-baseline gap-3">
-            <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+            <span className="text-2xl sm:text-3xl font-extrabold text-gray-900 font-mono">
               {stats.totalValuationLKR >= 1000000000
                 ? `${(stats.totalValuationLKR / 1000000000).toFixed(2)}B`
                 : `${(stats.totalValuationLKR / 1000000).toFixed(1)}M`}
             </span>
-            <span className="text-xs font-semibold text-blue-400">LKR</span>
+            <span className="text-xs font-semibold text-blue-600">LKR</span>
           </div>
-          <p className="text-xs text-neutral-400 mt-1">Combined value of approved vehicles</p>
+          <p className="text-xs text-gray-400 mt-1">Combined value of approved vehicles</p>
         </div>
       </div>
 
       {/* 3. Primary Moderation Queue Table */}
-      <div className="bg-neutral-900/90 border border-neutral-800/80 rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
         {/* Table Header with Filters */}
-        <div className="p-5 sm:p-6 border-b border-neutral-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-5 sm:p-6 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold text-white tracking-tight">
+              <h2 className="text-lg font-bold text-gray-900 tracking-tight">
                 Advertisement Submissions
               </h2>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-neutral-800 text-neutral-300 font-mono">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 font-mono">
                 {filteredSubmissions.length} listings
               </span>
             </div>
-            <p className="text-xs text-neutral-400 mt-0.5">
+            <p className="text-xs text-gray-400 mt-0.5">
               Review vehicle specifications, seller contact, verify price, and approve or reject publication.
             </p>
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-1.5 bg-neutral-950 p-1 rounded-xl border border-neutral-800 text-xs">
+          <div className="flex items-center gap-1.5 bg-gray-100 p-1 rounded-xl border border-gray-200 text-xs">
             {(["pending", "all", "approved", "rejected"] as const).map((tab) => (
               <button
                 key={tab}
@@ -316,9 +316,9 @@ export default function AdminDashboardPage() {
                 className={`px-3 py-1.5 rounded-lg font-bold capitalize transition-all cursor-pointer ${
                   filterStatus === tab
                     ? tab === "pending"
-                      ? "bg-amber-600 text-white shadow-xs"
+                      ? "bg-amber-500 text-white shadow-xs"
                       : "bg-blue-600 text-white shadow-xs"
-                    : "text-neutral-400 hover:text-white"
+                    : "text-gray-500 hover:text-gray-900"
                 }`}
               >
                 {tab === "pending" ? `Pending (${pendingCount})` : tab}
@@ -329,14 +329,14 @@ export default function AdminDashboardPage() {
 
         {/* Table Content */}
         {loading ? (
-          <div className="py-20 text-center text-neutral-400 text-sm">
+          <div className="py-20 text-center text-gray-400 text-sm">
             <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
             Loading advertisements from database...
           </div>
         ) : filteredSubmissions.length === 0 ? (
-          <div className="py-16 text-center text-neutral-400 text-sm">
-            <p className="font-semibold text-neutral-300">No advertisements found in this queue.</p>
-            <p className="text-xs text-neutral-500 mt-1">
+          <div className="py-16 text-center text-gray-400 text-sm">
+            <p className="font-semibold text-gray-600">No advertisements found in this queue.</p>
+            <p className="text-xs text-gray-400 mt-1">
               {filterStatus === "pending"
                 ? "All caught up! There are no submissions awaiting admin review."
                 : "No listings match the selected filter."}
@@ -346,7 +346,7 @@ export default function AdminDashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-neutral-800/80 bg-neutral-950/50 text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+                <tr className="border-b border-gray-200 bg-gray-50 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
                   <th className="py-3.5 px-6">Vehicle & Spec</th>
                   <th className="py-3.5 px-6">Seller Contact</th>
                   <th className="py-3.5 px-6">Listed Price</th>
@@ -354,10 +354,10 @@ export default function AdminDashboardPage() {
                   <th className="py-3.5 px-6 text-right">Moderation Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-800/60 text-sm">
+              <tbody className="divide-y divide-gray-100 text-sm">
                 {filteredSubmissions.map((ad) => {
                   return (
-                    <tr key={ad._id} className="hover:bg-neutral-800/40 transition-colors group">
+                    <tr key={ad._id} className="hover:bg-gray-50 transition-colors group">
                       {/* Vehicle Spec with Thumbnail & Click to View */}
                       <td className="py-4 px-6">
                         <div
@@ -366,20 +366,20 @@ export default function AdminDashboardPage() {
                           title="Click to view full details"
                         >
                           {ad.images && ad.images.length > 0 ? (
-                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-neutral-800 shrink-0 border border-neutral-700/60 relative group-hover:border-blue-500 transition-colors">
+                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-200 relative group-hover:border-blue-400 transition-colors">
                               <img
                                 src={ad.images[0]}
                                 alt=""
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                               />
                               {ad.images.length > 1 && (
-                                <span className="absolute bottom-0.5 right-0.5 bg-black/80 text-[9px] font-mono text-white px-1 rounded">
+                                <span className="absolute bottom-0.5 right-0.5 bg-black/70 text-[9px] font-mono text-white px-1 rounded">
                                   +{ad.images.length - 1}
                                 </span>
                               )}
                             </div>
                           ) : (
-                            <div className="w-12 h-12 rounded-xl bg-neutral-800 border border-neutral-700/60 flex items-center justify-center text-neutral-500 shrink-0">
+                            <div className="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 shrink-0">
                               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                               </svg>
@@ -387,11 +387,11 @@ export default function AdminDashboardPage() {
                           )}
 
                           <div>
-                            <div className="font-semibold text-white group-hover:text-blue-400 transition-colors flex items-center gap-1.5">
+                            <div className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
                               <span>{ad.brand} {ad.model}</span>
                             </div>
-                            <div className="text-xs text-neutral-400 flex items-center gap-2 mt-0.5">
-                              <span className="font-mono text-neutral-300 font-bold">{ad.refId}</span>
+                            <div className="text-xs text-gray-400 flex items-center gap-2 mt-0.5">
+                              <span className="font-mono text-gray-600 font-bold">{ad.refId}</span>
                               <span>•</span>
                               <span>{ad.year}</span>
                               <span>•</span>
@@ -403,8 +403,8 @@ export default function AdminDashboardPage() {
 
                       {/* Seller Contact */}
                       <td className="py-4 px-6">
-                        <div className="text-sm font-medium text-neutral-200">{ad.sellerName}</div>
-                        <div className="text-xs text-neutral-400 flex items-center gap-2 mt-0.5">
+                        <div className="text-sm font-medium text-gray-700">{ad.sellerName}</div>
+                        <div className="text-xs text-gray-400 flex items-center gap-2 mt-0.5">
                           <span>{ad.sellerPhone}</span>
                           <span>•</span>
                           <span>{ad.district}</span>
@@ -412,45 +412,45 @@ export default function AdminDashboardPage() {
                       </td>
 
                       {/* Listed Price */}
-                      <td className="py-4 px-6 font-semibold text-white font-mono">
+                      <td className="py-4 px-6 font-semibold text-gray-900 font-mono">
                         LKR {ad.priceLKR.toLocaleString()}
                       </td>
 
                       {/* Status Badge */}
                       <td className="py-4 px-6">
                         {ad.status === "pending" && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                             Pending Approval
                           </span>
                         )}
                         {(ad.status === "approved" || ad.status === "active") && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                             Live in Catalog
                           </span>
                         )}
                         {ad.status === "rejected" && (
                           <div>
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                              <span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-600 border border-rose-200">
+                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                               Rejected
                             </span>
                             {ad.rejectionReason && (
-                              <p className="text-[10px] text-neutral-400 mt-1 max-w-[160px] truncate" title={ad.rejectionReason}>
+                              <p className="text-[10px] text-gray-400 mt-1 max-w-[160px] truncate" title={ad.rejectionReason}>
                                 {ad.rejectionReason}
                               </p>
                             )}
                           </div>
                         )}
                         {ad.status === "sold" && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-600 border border-indigo-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
                             Sold
                           </span>
                         )}
                         {ad.status === "archived" && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral-700/30 text-neutral-400 border border-neutral-700/50">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-500 border border-gray-200">
                             Archived
                           </span>
                         )}
@@ -463,10 +463,10 @@ export default function AdminDashboardPage() {
                           <button
                             type="button"
                             onClick={() => setSelectedDetailAd(ad)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold border border-neutral-700/80 transition-all cursor-pointer shadow-xs hover:border-blue-500/50"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold border border-gray-200 transition-all cursor-pointer shadow-xs hover:border-blue-300"
                             title="Open full advertisement details in pop-up"
                           >
-                            <svg className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-3.5 h-3.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
@@ -483,7 +483,7 @@ export default function AdminDashboardPage() {
                               </button>
                               <button
                                 onClick={() => openRejectModal(ad)}
-                                className="px-3.5 py-1.5 rounded-lg bg-neutral-800 hover:bg-rose-500/20 hover:text-rose-400 text-neutral-300 text-xs font-bold border border-neutral-700 transition-all cursor-pointer"
+                                className="px-3.5 py-1.5 rounded-lg bg-gray-100 hover:bg-rose-50 hover:text-rose-600 text-gray-600 text-xs font-bold border border-gray-200 transition-all cursor-pointer"
                               >
                                 Reject
                               </button>
@@ -491,14 +491,14 @@ export default function AdminDashboardPage() {
                           ) : ad.status === "approved" || ad.status === "active" ? (
                             <button
                               onClick={() => openRejectModal(ad)}
-                              className="text-xs text-neutral-400 hover:text-rose-400 underline underline-offset-2 cursor-pointer font-medium"
+                              className="text-xs text-gray-400 hover:text-rose-500 underline underline-offset-2 cursor-pointer font-medium"
                             >
                               Revoke
                             </button>
                           ) : (
                             <button
                               onClick={() => handleUpdateStatus(ad._id, "approved")}
-                              className="text-xs text-neutral-400 hover:text-emerald-400 underline underline-offset-2 cursor-pointer font-medium"
+                              className="text-xs text-gray-400 hover:text-emerald-500 underline underline-offset-2 cursor-pointer font-medium"
                             >
                               Approve
                             </button>
@@ -514,12 +514,12 @@ export default function AdminDashboardPage() {
         )}
 
         {/* Table Footer */}
-        <div className="p-4 border-t border-neutral-800/80 bg-neutral-950/40 flex items-center justify-between text-xs text-neutral-400">
+        <div className="p-4 border-t border-gray-200 bg-gray-50/50 flex items-center justify-between text-xs text-gray-500">
           <span>Showing {filteredSubmissions.length} of {submissions.length} submissions</span>
           <Link
             href="/vehicles"
             target="_blank"
-            className="text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1"
+            className="text-blue-600 hover:text-blue-500 font-bold flex items-center gap-1"
           >
             <span>View Public Vehicle Inventory</span>
             <span>→</span>
@@ -529,31 +529,31 @@ export default function AdminDashboardPage() {
 
       {/* 4. Reject Reason Modal */}
       {rejectModal.isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
-              <h3 className="font-bold text-white text-base">Reject Advertisement</h3>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+              <h3 className="font-bold text-gray-900 text-base">Reject Advertisement</h3>
               <button
                 onClick={() => setRejectModal({ isOpen: false, adId: null, vehicleTitle: "", reason: "" })}
-                className="text-neutral-400 hover:text-white text-lg font-bold"
+                className="text-gray-400 hover:text-gray-700 text-lg font-bold"
               >
                 ✕
               </button>
             </div>
 
             <div>
-              <p className="text-xs text-neutral-400 mb-1">Target vehicle:</p>
-              <p className="font-semibold text-white text-sm">{rejectModal.vehicleTitle}</p>
+              <p className="text-xs text-gray-400 mb-1">Target vehicle:</p>
+              <p className="font-semibold text-gray-900 text-sm">{rejectModal.vehicleTitle}</p>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-neutral-300">
+              <label className="text-xs font-bold uppercase tracking-wider text-gray-600">
                 Reason for Rejection
               </label>
               <select
                 value={rejectModal.reason}
                 onChange={(e) => setRejectModal((prev) => ({ ...prev, reason: e.target.value }))}
-                className="w-full bg-neutral-950 border border-neutral-700 text-xs text-white p-2.5 rounded-lg focus:outline-none focus:border-rose-500 cursor-pointer"
+                className="w-full bg-gray-50 border border-gray-300 text-xs text-gray-800 p-2.5 rounded-lg focus:outline-none focus:border-rose-500 cursor-pointer"
               >
                 <option value="Incomplete or inaccurate vehicle specifications">
                   Incomplete or inaccurate vehicle specifications
@@ -580,7 +580,7 @@ export default function AdminDashboardPage() {
               <button
                 type="button"
                 onClick={() => setRejectModal({ isOpen: false, adId: null, vehicleTitle: "", reason: "" })}
-                className="px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold cursor-pointer"
+                className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold cursor-pointer"
               >
                 Cancel
               </button>

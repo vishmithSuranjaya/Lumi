@@ -177,19 +177,19 @@ export default function AdvertisementDetailModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 lg:p-7 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 lg:p-7 animate-in fade-in duration-200">
       {/* Click backdrop to close */}
       <div className="fixed inset-0" onClick={onClose} />
 
       {/* Modal Container */}
       <div
-        className="relative bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-5xl max-h-[92vh] flex flex-col shadow-2xl shadow-black/80 overflow-hidden z-10 animate-in zoom-in-95 duration-150"
+        className="relative bg-white border border-gray-200 rounded-2xl w-full max-w-5xl max-h-[92vh] flex flex-col shadow-2xl shadow-gray-900/20 overflow-hidden z-10 animate-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Top Sticky Header */}
-        <div className="px-6 py-4 border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-md flex items-center justify-between gap-4 shrink-0">
+        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50/90 backdrop-blur-md flex items-center justify-between gap-4 shrink-0">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shrink-0">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
@@ -207,19 +207,19 @@ export default function AdvertisementDetailModal({
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-base sm:text-lg font-extrabold text-white truncate">
+                <h2 className="text-base sm:text-lg font-extrabold text-gray-900 truncate">
                   {ad.brand} {ad.model} ({ad.year})
                 </h2>
-                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-neutral-800 text-neutral-300 border border-neutral-700/60">
+                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 border border-gray-200">
                   {ad.category}
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-neutral-400 mt-0.5">
-                <span className="font-mono text-neutral-300">{ad.refId}</span>
+              <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
+                <span className="font-mono font-medium text-gray-700">{ad.refId}</span>
                 <button
                   type="button"
                   onClick={handleCopyRef}
-                  className="text-[11px] text-blue-400 hover:text-blue-300 font-medium underline underline-offset-2 cursor-pointer"
+                  className="text-[11px] text-blue-600 hover:text-blue-700 font-medium underline underline-offset-2 cursor-pointer"
                   title="Copy Reference ID"
                 >
                   {copiedRef ? "Copied!" : "Copy"}
@@ -234,31 +234,31 @@ export default function AdvertisementDetailModal({
           <div className="flex items-center gap-3 shrink-0">
             {/* Status Pill */}
             {(ad.status === "approved" || ad.status === "active") && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                 Live in Catalog
               </span>
             )}
             {ad.status === "pending" && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                 Pending Review
               </span>
             )}
             {ad.status === "sold" && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                <span className="w-2 h-2 rounded-full bg-indigo-400"></span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
                 Sold
               </span>
             )}
             {ad.status === "archived" && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-700/30 text-neutral-400 border border-neutral-700/50">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
                 Archived
               </span>
             )}
             {ad.status === "rejected" && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                <span className="w-2 h-2 rounded-full bg-rose-400"></span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                <span className="w-2 h-2 rounded-full bg-rose-500"></span>
                 Rejected
               </span>
             )}
@@ -266,7 +266,7 @@ export default function AdvertisementDetailModal({
             {/* Close modal X button */}
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-900 flex items-center justify-center transition-colors cursor-pointer"
               aria-label="Close modal"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -277,13 +277,13 @@ export default function AdvertisementDetailModal({
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-5 sm:p-6 lg:p-7 space-y-6 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-5 sm:p-6 lg:p-7 space-y-6 custom-scrollbar bg-white">
           {/* 1. Photo Gallery Section */}
           <div className="space-y-3">
             {images.length > 0 && currentImage ? (
               <div className="space-y-3">
                 {/* Main Large Photo Display */}
-                <div className="relative w-full h-72 sm:h-96 md:h-[420px] bg-neutral-950 rounded-2xl overflow-hidden border border-neutral-800 flex items-center justify-center group">
+                <div className="relative w-full h-72 sm:h-96 md:h-[420px] bg-gray-100 rounded-2xl overflow-hidden border border-gray-200 flex items-center justify-center group">
                   <img
                     src={currentImage}
                     alt={`${ad.brand} ${ad.model}`}
@@ -299,7 +299,7 @@ export default function AdvertisementDetailModal({
                           prev === 0 ? images.length - 1 : prev - 1
                         )
                       }
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center border border-white/20 transition-all opacity-80 hover:opacity-100 cursor-pointer shadow-lg"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-gray-800 flex items-center justify-center border border-gray-200 transition-all opacity-85 hover:opacity-100 cursor-pointer shadow-lg"
                       title="Previous Image"
                     >
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -317,7 +317,7 @@ export default function AdvertisementDetailModal({
                           prev === images.length - 1 ? 0 : prev + 1
                         )
                       }
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center border border-white/20 transition-all opacity-80 hover:opacity-100 cursor-pointer shadow-lg"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-gray-800 flex items-center justify-center border border-gray-200 transition-all opacity-85 hover:opacity-100 cursor-pointer shadow-lg"
                       title="Next Image"
                     >
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -327,7 +327,7 @@ export default function AdvertisementDetailModal({
                   )}
 
                   {/* Photo Counter Pill */}
-                  <div className="absolute bottom-3 right-3 bg-black/75 backdrop-blur-md border border-white/10 text-white text-xs font-mono font-bold px-3 py-1 rounded-full">
+                  <div className="absolute bottom-3 right-3 bg-gray-900/80 backdrop-blur-md border border-white/20 text-white text-xs font-mono font-bold px-3 py-1 rounded-full shadow-md">
                     {activeImageIndex + 1} / {images.length}
                   </div>
 
@@ -336,7 +336,7 @@ export default function AdvertisementDetailModal({
                     href={currentImage}
                     target="_blank"
                     rel="noreferrer"
-                    className="absolute top-3 right-3 bg-black/60 hover:bg-black/90 text-neutral-300 hover:text-white p-2 rounded-lg backdrop-blur-md border border-white/10 transition-colors text-xs flex items-center gap-1.5"
+                    className="absolute top-3 right-3 bg-white/90 hover:bg-white text-gray-700 hover:text-gray-900 p-2 rounded-lg backdrop-blur-md border border-gray-200 transition-colors text-xs flex items-center gap-1.5 shadow-sm"
                     title="Open original high-res image"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -361,8 +361,8 @@ export default function AdvertisementDetailModal({
                         onClick={() => setActiveImageIndex(idx)}
                         className={`relative w-20 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
                           activeImageIndex === idx
-                            ? "border-blue-500 scale-105 shadow-md shadow-blue-500/30"
-                            : "border-neutral-800 opacity-60 hover:opacity-100"
+                            ? "border-blue-600 scale-105 shadow-md shadow-blue-500/20"
+                            : "border-gray-200 opacity-60 hover:opacity-100"
                         }`}
                       >
                         <img
@@ -376,8 +376,8 @@ export default function AdvertisementDetailModal({
                 )}
               </div>
             ) : (
-              <div className="w-full h-48 bg-neutral-950 border border-neutral-800/80 rounded-2xl flex flex-col items-center justify-center text-neutral-500 gap-2">
-                <svg className="w-10 h-10 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-full h-48 bg-gray-50 border border-gray-200 rounded-2xl flex flex-col items-center justify-center text-gray-400 gap-2">
+                <svg className="w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -393,25 +393,25 @@ export default function AdvertisementDetailModal({
           {/* 2. Key Pricing & Core Specs Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Price Box */}
-            <div className="p-4 rounded-xl bg-neutral-950/70 border border-neutral-800/90 flex flex-col justify-between">
-              <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between">
+              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 Listed Asking Price
               </span>
               <div className="mt-2">
-                <div className="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight">
+                <div className="text-2xl sm:text-3xl font-black text-gray-900 font-mono tracking-tight">
                   LKR {ad.priceLKR?.toLocaleString() || "0"}
                 </div>
                 <div className="mt-1 flex items-center gap-2">
                   <span
                     className={`text-[11px] font-bold px-2 py-0.5 rounded ${
                       ad.isNegotiable
-                        ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                        : "bg-neutral-800 text-neutral-400 border border-neutral-700/50"
+                        ? "bg-blue-50 text-blue-700 border border-blue-200"
+                        : "bg-gray-100 text-gray-600 border border-gray-200"
                     }`}
                   >
                     {ad.isNegotiable ? "Negotiable" : "Fixed Price"}
                   </span>
-                  <span className="text-xs text-neutral-400 font-sans">
+                  <span className="text-xs text-gray-500 font-sans">
                     ≈ {(ad.priceLKR / 1000000).toFixed(2)} Million LKR
                   </span>
                 </div>
@@ -419,106 +419,106 @@ export default function AdvertisementDetailModal({
             </div>
 
             {/* Location & District */}
-            <div className="p-4 rounded-xl bg-neutral-950/70 border border-neutral-800/90 flex flex-col justify-between">
-              <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between">
+              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 Location & Territory
               </span>
               <div className="mt-2">
-                <div className="text-lg font-bold text-white flex items-center gap-1.5">
-                  <svg className="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                  <svg className="w-4 h-4 text-rose-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                   <span>{ad.district}</span>
                 </div>
-                <p className="text-xs text-neutral-400 mt-1">
-                  City / Town: <strong className="text-neutral-200">{ad.city || "Not specified"}</strong>
+                <p className="text-xs text-gray-500 mt-1">
+                  City / Town: <strong className="text-gray-800">{ad.city || "Not specified"}</strong>
                 </p>
               </div>
             </div>
 
             {/* Condition & Status */}
-            <div className="p-4 rounded-xl bg-neutral-950/70 border border-neutral-800/90 flex flex-col justify-between">
-              <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between">
+              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 Registration & Status
               </span>
               <div className="mt-2">
-                <div className="text-base font-bold text-white">
+                <div className="text-base font-bold text-gray-900">
                   {ad.condition}
                 </div>
-                <p className="text-xs text-neutral-400 mt-1">
-                  Manufacture Year: <strong className="text-neutral-200">{ad.year}</strong>
+                <p className="text-xs text-gray-500 mt-1">
+                  Manufacture Year: <strong className="text-gray-800">{ad.year}</strong>
                 </p>
               </div>
             </div>
           </div>
 
           {/* 3. Detailed Specifications Grid */}
-          <div className="bg-neutral-950/60 border border-neutral-800/80 rounded-2xl p-5 space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400">
+          <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-5 space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
               Technical Specifications
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {/* Mileage */}
-              <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Mileage</span>
-                <span className="text-sm font-semibold text-white font-mono mt-0.5 block">
+              <div className="p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Mileage</span>
+                <span className="text-sm font-semibold text-gray-900 font-mono mt-0.5 block">
                   {ad.mileage} km
                 </span>
               </div>
 
               {/* Fuel Type */}
-              <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Fuel Type</span>
-                <span className="text-sm font-semibold text-white mt-0.5 block">
+              <div className="p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Fuel Type</span>
+                <span className="text-sm font-semibold text-gray-900 mt-0.5 block">
                   {ad.fuelType}
                 </span>
               </div>
 
               {/* Transmission */}
-              <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Transmission</span>
-                <span className="text-sm font-semibold text-white mt-0.5 block">
+              <div className="p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Transmission</span>
+                <span className="text-sm font-semibold text-gray-900 mt-0.5 block">
                   {ad.transmission}
                 </span>
               </div>
 
               {/* Engine Capacity */}
-              <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Engine Capacity</span>
-                <span className="text-sm font-semibold text-white mt-0.5 block">
+              <div className="p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Engine Capacity</span>
+                <span className="text-sm font-semibold text-gray-900 mt-0.5 block">
                   {ad.engineCapacity ? `${ad.engineCapacity} cc` : "Not specified"}
                 </span>
               </div>
 
               {/* Category */}
-              <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Body / Category</span>
-                <span className="text-sm font-semibold text-white mt-0.5 block truncate" title={ad.category}>
+              <div className="p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Body / Category</span>
+                <span className="text-sm font-semibold text-gray-900 mt-0.5 block truncate" title={ad.category}>
                   {ad.category}
                 </span>
               </div>
 
               {/* Make / Brand */}
-              <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Make</span>
-                <span className="text-sm font-semibold text-white mt-0.5 block">
+              <div className="p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Make</span>
+                <span className="text-sm font-semibold text-gray-900 mt-0.5 block">
                   {ad.brand}
                 </span>
               </div>
 
               {/* Model */}
-              <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Model</span>
-                <span className="text-sm font-semibold text-white mt-0.5 block">
+              <div className="p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Model</span>
+                <span className="text-sm font-semibold text-gray-900 mt-0.5 block">
                   {ad.model}
                 </span>
               </div>
 
               {/* Views Counter */}
-              <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Marketplace Views</span>
-                <span className="text-sm font-semibold text-white font-mono mt-0.5 block">
+              <div className="p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Marketplace Views</span>
+                <span className="text-sm font-semibold text-gray-900 font-mono mt-0.5 block">
                   {ad.views || 0} visits
                 </span>
               </div>
@@ -526,14 +526,14 @@ export default function AdvertisementDetailModal({
           </div>
 
           {/* 4. Seller & Contact Details Card */}
-          <div className="bg-neutral-950/60 border border-neutral-800/80 rounded-2xl p-5 space-y-4">
+          <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-5 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
                 Seller Contact Information
               </h3>
               {ad.hasWhatsApp && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                   WhatsApp Available
                 </span>
               )}
@@ -541,10 +541,10 @@ export default function AdvertisementDetailModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {/* Seller Name */}
-              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Seller Name</span>
-                <div className="text-sm font-bold text-white mt-1 flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-blue-600/20 text-blue-400 font-extrabold text-xs flex items-center justify-center shrink-0">
+              <div className="p-3.5 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Seller Name</span>
+                <div className="text-sm font-bold text-gray-900 mt-1 flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-extrabold text-xs flex items-center justify-center shrink-0">
                     {ad.sellerName ? ad.sellerName.charAt(0).toUpperCase() : "S"}
                   </div>
                   <span className="truncate">{ad.sellerName}</span>
@@ -552,12 +552,12 @@ export default function AdvertisementDetailModal({
               </div>
 
               {/* Phone Number with Click to Call & Copy */}
-              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Primary Phone</span>
+              <div className="p-3.5 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Primary Phone</span>
                 <div className="mt-1 flex items-center justify-between gap-2">
                   <a
                     href={`tel:${ad.sellerPhone}`}
-                    className="text-sm font-bold text-white hover:text-blue-400 font-mono transition-colors"
+                    className="text-sm font-bold text-gray-900 hover:text-blue-600 font-mono transition-colors"
                   >
                     {ad.sellerPhone}
                   </a>
@@ -565,7 +565,7 @@ export default function AdvertisementDetailModal({
                     <button
                       type="button"
                       onClick={handleCopyPhone}
-                      className="text-[11px] text-neutral-400 hover:text-white px-2 py-0.5 rounded bg-neutral-800 border border-neutral-700/60 cursor-pointer"
+                      className="text-[11px] text-gray-600 hover:text-gray-900 px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 border border-gray-200 cursor-pointer"
                     >
                       {copiedPhone ? "Copied" : "Copy"}
                     </button>
@@ -574,7 +574,7 @@ export default function AdvertisementDetailModal({
                         href={getWhatsAppUrl()}
                         target="_blank"
                         rel="noreferrer"
-                        className="p-1 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors"
+                        className="p-1 rounded bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"
                         title="Chat on WhatsApp"
                       >
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -587,11 +587,11 @@ export default function AdvertisementDetailModal({
               </div>
 
               {/* Email Address */}
-              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800/60">
-                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Email Address</span>
+              <div className="p-3.5 rounded-xl bg-white border border-gray-200 shadow-xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Email Address</span>
                 <a
                   href={`mailto:${ad.sellerEmail}`}
-                  className="text-sm font-medium text-blue-400 hover:text-blue-300 truncate block mt-1 underline underline-offset-2"
+                  className="text-sm font-medium text-blue-600 hover:text-blue-700 truncate block mt-1 underline underline-offset-2"
                   title={ad.sellerEmail}
                 >
                   {ad.sellerEmail}
@@ -601,16 +601,16 @@ export default function AdvertisementDetailModal({
           </div>
 
           {/* 5. Vehicle Description Section */}
-          <div className="bg-neutral-950/60 border border-neutral-800/80 rounded-2xl p-5 space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400">
+          <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-5 space-y-2">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
               Seller Description
             </h3>
             {ad.description ? (
-              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed whitespace-pre-line bg-neutral-900/60 p-4 rounded-xl border border-neutral-800/60 font-normal">
+              <p className="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line bg-white p-4 rounded-xl border border-gray-200 font-normal">
                 {ad.description}
               </p>
             ) : (
-              <p className="text-xs text-neutral-500 italic p-4 bg-neutral-900/40 rounded-xl border border-neutral-800/40">
+              <p className="text-xs text-gray-400 italic p-4 bg-white rounded-xl border border-gray-200">
                 No custom description was entered by the seller.
               </p>
             )}
@@ -618,18 +618,18 @@ export default function AdvertisementDetailModal({
 
           {/* 6. Moderation History & Rejection Alert */}
           {ad.status === "rejected" && ad.rejectionReason && (
-            <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 space-y-1">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-400">
+            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 space-y-1">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-700">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
                 <span>Rejection Reason</span>
               </div>
-              <p className="text-xs text-rose-200 font-medium pl-6">
+              <p className="text-xs text-rose-900 font-medium pl-6">
                 {ad.rejectionReason}
               </p>
               {ad.reviewedAt && (
-                <p className="text-[11px] text-rose-400/80 pl-6">
+                <p className="text-[11px] text-rose-600 pl-6">
                   Reviewed on {new Date(ad.reviewedAt).toLocaleString()} by {ad.reviewedBy || "Staff Admin"}
                 </p>
               )}
@@ -638,29 +638,29 @@ export default function AdvertisementDetailModal({
 
           {/* 7. Inline Rejection Form Drawer */}
           {showRejectForm && (
-            <div className="p-4 sm:p-5 rounded-2xl bg-neutral-950 border border-rose-500/40 space-y-3 animate-in fade-in duration-150">
+            <div className="p-4 sm:p-5 rounded-2xl bg-rose-50/60 border border-rose-200 space-y-3 animate-in fade-in duration-150">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-rose-400"></span>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-rose-700 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-rose-500"></span>
                   Confirm Rejection Reason
                 </h4>
                 <button
                   type="button"
                   onClick={() => setShowRejectForm(false)}
-                  className="text-xs text-neutral-400 hover:text-white"
+                  className="text-xs text-gray-500 hover:text-gray-900 cursor-pointer"
                 >
                   ✕ Cancel
                 </button>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs text-neutral-300 font-medium">
+                <label className="text-xs text-gray-700 font-medium">
                   Select predefined reason:
                 </label>
                 <select
                   value={rejectionReason}
                   onChange={(e) => setRejectionReason(e.target.value)}
-                  className="w-full bg-neutral-900 border border-neutral-700 text-xs text-white p-2.5 rounded-xl focus:outline-none focus:border-rose-500 cursor-pointer"
+                  className="w-full bg-white border border-gray-300 text-xs text-gray-900 p-2.5 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500 cursor-pointer"
                 >
                   <option value="Incomplete or inaccurate vehicle specifications">
                     Incomplete or inaccurate vehicle specifications
@@ -689,7 +689,7 @@ export default function AdvertisementDetailModal({
                     value={customReason}
                     onChange={(e) => setCustomReason(e.target.value)}
                     placeholder="Enter custom rejection reason here..."
-                    className="w-full bg-neutral-900 border border-neutral-700 text-xs text-white p-2.5 rounded-xl focus:outline-none focus:border-rose-500"
+                    className="w-full bg-white border border-gray-300 text-xs text-gray-900 p-2.5 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500"
                   />
                 )}
               </div>
@@ -698,7 +698,7 @@ export default function AdvertisementDetailModal({
                 <button
                   type="button"
                   onClick={() => setShowRejectForm(false)}
-                  className="px-3.5 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold"
+                  className="px-3.5 py-1.5 rounded-lg bg-white hover:bg-gray-100 text-gray-700 border border-gray-200 text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -706,7 +706,7 @@ export default function AdvertisementDetailModal({
                   type="button"
                   disabled={actionLoading}
                   onClick={handleConfirmReject}
-                  className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-md cursor-pointer disabled:opacity-50"
+                  className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-sm cursor-pointer disabled:opacity-50"
                 >
                   {actionLoading ? "Submitting..." : "Confirm & Send Rejection Email"}
                 </button>
@@ -716,8 +716,8 @@ export default function AdvertisementDetailModal({
         </div>
 
         {/* Modal Sticky Bottom Action Footer */}
-        <div className="px-6 py-4 border-t border-neutral-800 bg-neutral-950/90 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
-          <div className="flex items-center gap-2 self-start sm:self-auto text-xs text-neutral-400 font-mono">
+        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50/90 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
+          <div className="flex items-center gap-2 self-start sm:self-auto text-xs text-gray-500 font-mono">
             <span>DB ID: {ad._id}</span>
             {ad.updatedAt && (
               <>
@@ -733,10 +733,10 @@ export default function AdvertisementDetailModal({
               <Link
                 href="/vehicles"
                 target="_blank"
-                className="px-3.5 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
               >
                 <span>Live Catalog</span>
-                <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </Link>
@@ -748,7 +748,7 @@ export default function AdvertisementDetailModal({
                 value={ad.status}
                 onChange={(e) => handleQuickStatusSelect(e.target.value)}
                 disabled={actionLoading}
-                className="bg-neutral-900 border border-neutral-700 text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-blue-500 cursor-pointer font-semibold disabled:opacity-50"
+                className="bg-white border border-gray-300 text-xs text-gray-800 rounded-xl px-3 py-2 focus:outline-hidden focus:ring-2 focus:ring-blue-500/30 cursor-pointer font-semibold disabled:opacity-50 shadow-2xs"
               >
                 <option value="approved">Set Live (Approved)</option>
                 <option value="pending">Set Pending</option>
@@ -763,7 +763,7 @@ export default function AdvertisementDetailModal({
               <button
                 type="button"
                 onClick={() => onDelete(ad)}
-                className="p-2 rounded-xl bg-neutral-900 hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 border border-neutral-800 transition-colors cursor-pointer"
+                className="p-2 rounded-xl bg-white hover:bg-rose-50 text-gray-400 hover:text-rose-600 border border-gray-200 hover:border-rose-200 transition-colors cursor-pointer shadow-2xs"
                 title="Permanently delete vehicle"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -779,7 +779,7 @@ export default function AdvertisementDetailModal({
                   type="button"
                   disabled={actionLoading}
                   onClick={() => setShowRejectForm(true)}
-                  className="px-4 py-2 rounded-xl bg-neutral-900 hover:bg-rose-500/20 text-neutral-200 hover:text-rose-400 border border-neutral-700 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-white hover:bg-rose-50 text-gray-700 hover:text-rose-700 border border-gray-300 hover:border-rose-300 text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-2xs"
                 >
                   Reject Listing
                 </button>
@@ -787,7 +787,7 @@ export default function AdvertisementDetailModal({
                   type="button"
                   disabled={actionLoading}
                   onClick={handleApprove}
-                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-lg shadow-emerald-600/20 transition-all hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-md shadow-emerald-600/20 transition-all hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -801,7 +801,7 @@ export default function AdvertisementDetailModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-bold transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
             >
               Close
             </button>

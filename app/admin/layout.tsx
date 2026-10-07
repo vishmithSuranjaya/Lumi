@@ -12,7 +12,7 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex font-sans antialiased selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-gray-50 text-gray-900 flex font-sans antialiased selection:bg-blue-600 selection:text-white">
       {/* Collapsible/Fixed Sidebar */}
       <AdminSidebar
         isOpen={sidebarOpen}
