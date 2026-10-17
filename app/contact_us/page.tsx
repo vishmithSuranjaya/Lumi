@@ -274,7 +274,7 @@ export default function ContactPage() {
                                 {/* Direct WhatsApp Consultation CTA */}
                                 <div className="mt-8 pt-6 border-t border-neutral-100">
                                     <a
-                                        href="https://wa.me/94771234567"
+                                        href=""
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2.5 shadow-md active:scale-98"

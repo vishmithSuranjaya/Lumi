@@ -7,38 +7,11 @@ import { VEHICLE_CATEGORIES } from "@/lib/validations/advertisement";
 // Custom tailored SVG icons for each specific vehicle and equipment category
 function CategoryIcon({ category }: { category: string }) {
     switch (category) {
-        case "Cars & Sedans":
-            return (
-                <img
-                    src="/category/sedan.png"
-                    alt="Cars & Sedans"
-                    className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
-                />
-            );
-
-        case "SUVs & 4x4":
-            return (
-                <img
-                    src="/category/suv.png"
-                    alt="Cars & Sedans"
-                    className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
-                />
-            );
-
-        case "Sports & Luxury Coupes":
-            return (
-                <img
-                    src="/category/sport_car.png"
-                    alt="Cars & Sedans"
-                    className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
-                />
-            );
-
         case "Motorcycles & Scooters":
             return (
                 <img
                     src="/category/bike.png"
-                    alt="Cars & Sedans"
+                    alt={category}
                     className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
                 />
             );
@@ -47,16 +20,44 @@ function CategoryIcon({ category }: { category: string }) {
             return (
                 <img
                     src="/category/three_wheeler.png"
-                    alt="Cars & Sedans"
+                    alt={category}
                     className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
                 />
             );
+
+        case "Cars & Sedans":
+            return (
+                <img
+                    src="/category/sedan.png"
+                    alt={category}
+                    className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+            );
+
+        case "SUVs & 4x4":
+            return (
+                <img
+                    src="/category/suv.png"
+                    alt={category}
+                    className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+            );
+
+        case "Sports & Luxury Coupes":
+            return (
+                <img
+                    src="/category/sport_car.png"
+                    alt={category}
+                    className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+            );
+
 
         case "Lorries & Commercial Trucks":
             return (
                 <img
                     src="/category/lorry.png"
-                    alt="Cars & Sedans"
+                    alt={category}
                     className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
                 />
             );
@@ -65,7 +66,7 @@ function CategoryIcon({ category }: { category: string }) {
             return (
                 <img
                     src="/category/bus.png"
-                    alt="Cars & Sedans"
+                    alt={category}
                     className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
                 />
             );
@@ -74,7 +75,7 @@ function CategoryIcon({ category }: { category: string }) {
             return (
                 <img
                     src="/category/heavy_machinery.png"
-                    alt="Cars & Sedans"
+                    alt={category}
                     className="max-h-24 max-w-[130px] sm:max-h-28 sm:max-w-[150px] object-contain group-hover:scale-105 transition-transform duration-300"
                 />
             );
@@ -93,11 +94,11 @@ function CategoryIcon({ category }: { category: string }) {
 
 // Optional subtitle or short description for each category
 const categoryTaglines: Record<string, string> = {
+    "Motorcycles & Scooters": "Two-Wheeler Mobility",
+    "Three-Wheelers (Tuk-Tuk)": "City Commuter",
     "Cars & Sedans": "Family & Executive",
     "SUVs & 4x4": "Off-Road & Adventure",
     "Sports & Luxury Coupes": "High-Performance",
-    "Motorcycles & Scooters": "Two-Wheeler Mobility",
-    "Three-Wheelers (Tuk-Tuk)": "City Commuter",
     "Lorries & Commercial Trucks": "Heavy Haul & Cargo",
     "Buses & Vans": "Group & Passenger",
     "Tractors & Heavy Machinery": "Agri & Construction",

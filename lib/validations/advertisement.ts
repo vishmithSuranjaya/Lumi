@@ -1,9 +1,9 @@
 export const VEHICLE_CATEGORIES = [
+    "Motorcycles & Scooters",
+    "Three-Wheelers (Tuk-Tuk)",
     "Cars & Sedans",
     "SUVs & 4x4",
     "Sports & Luxury Coupes",
-    "Motorcycles & Scooters",
-    "Three-Wheelers (Tuk-Tuk)",
     "Lorries & Commercial Trucks",
     "Buses & Vans",
     "Tractors & Heavy Machinery",
