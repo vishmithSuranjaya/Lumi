@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import {
-    signSessionToken,
+    signAccessToken,
+    generateRefreshToken,
+    setAuthCookies,
+    REFRESH_TOKEN_MAX_AGE,
+    RefreshTokenDocument,
     isAdminEmail,
-    AUTH_COOKIE_NAME,
     User,
 } from "@/lib/auth";
 
@@ -160,7 +163,17 @@ export async function GET(request: Request) {
             avatar: picture,
         };
 
-        const sessionToken = await signSessionToken(sessionPayload);
+        const sessionToken = await signAccessToken(sessionPayload);
+        const refresh = generateRefreshToken();
+
+        const refreshTokensCollection = db.collection<RefreshTokenDocument>("refresh_tokens");
+        await refreshTokensCollection.insertOne({
+            userId,
+            tokenHash: refresh.hash,
+            expiresAt: new Date(Date.now() + REFRESH_TOKEN_MAX_AGE * 1000),
+            createdAt: new Date(),
+            revokedAt: null,
+        });
 
         // Decide where to redirect
         const finalRedirect =
@@ -172,14 +185,8 @@ export async function GET(request: Request) {
 
         const response = NextResponse.redirect(new URL(finalRedirect, request.url));
 
-        // Set auth session cookie
-        response.cookies.set(AUTH_COOKIE_NAME, sessionToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: 60 * 60 * 24 * 7, // 7 days
-        });
+        // Set auth session cookies
+        setAuthCookies(response, sessionToken, refresh.token);
 
         // Clear OAuth state cookie
         response.cookies.set("g_oauth_state", "", {

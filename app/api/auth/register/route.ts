@@ -2,9 +2,12 @@ import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import {
     hashPassword,
-    signSessionToken,
+    signAccessToken,
+    generateRefreshToken,
+    setAuthCookies,
+    REFRESH_TOKEN_MAX_AGE,
+    RefreshTokenDocument,
     isAdminEmail,
-    AUTH_COOKIE_NAME,
     User,
 } from "@/lib/auth";
 
@@ -80,7 +83,19 @@ export async function POST(request: Request) {
             role: newUser.role,
         };
 
-        const token = await signSessionToken(sessionPayload);
+        // 1. Issue 15m access token
+        const accessToken = await signAccessToken(sessionPayload);
+
+        // 2. Generate opaque refresh token and store hash in DB
+        const refresh = generateRefreshToken();
+        const refreshTokensCollection = db.collection<RefreshTokenDocument>("refresh_tokens");
+        await refreshTokensCollection.insertOne({
+            userId,
+            tokenHash: refresh.hash,
+            expiresAt: new Date(Date.now() + REFRESH_TOKEN_MAX_AGE * 1000),
+            createdAt: new Date(),
+            revokedAt: null,
+        });
 
         const response = NextResponse.json(
             {
@@ -91,14 +106,8 @@ export async function POST(request: Request) {
             { status: 201 }
         );
 
-        // Set secure HTTP-only cookie
-        response.cookies.set(AUTH_COOKIE_NAME, token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: 60 * 60 * 24 * 7, // 7 days
-        });
+        // 3. Set cookies
+        setAuthCookies(response, accessToken, refresh.token);
 
         return response;
     } catch (error: any) {
@@ -109,5 +118,3 @@ export async function POST(request: Request) {
         );
     }
 }
-
-

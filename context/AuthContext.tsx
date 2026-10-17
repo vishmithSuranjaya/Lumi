@@ -60,7 +60,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const res = await fetch("/api/auth/me", { cache: "no-store" });
             if (res.ok) {
                 const data = await res.json();
-                setUser(data.user || null);
+                if (data.user) {
+                    setUser(data.user);
+                    return;
+                }
+            }
+
+            // Fallback: try explicit /api/auth/refresh
+            const refreshRes = await fetch("/api/auth/refresh", { method: "POST" });
+            if (refreshRes.ok) {
+                const refreshData = await refreshRes.json();
+                setUser(refreshData.user || null);
             } else {
                 setUser(null);
             }
@@ -74,6 +84,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         refreshUser();
     }, [refreshUser]);
+
+    // Keep access token alive while user is active on the page (refresh every 10 minutes)
+    useEffect(() => {
+        if (!user) return;
+
+        const interval = setInterval(async () => {
+            try {
+                const res = await fetch("/api/auth/refresh", { method: "POST" });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.user) {
+                        setUser(data.user);
+                    }
+                }
+            } catch (err) {
+                console.error("Silent token refresh error:", err);
+            }
+        }, 10 * 60 * 1000); // 10 minutes
+
+        return () => clearInterval(interval);
+    }, [user]);
+
+    // When tab becomes visible again after being backgrounded, verify/refresh session
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "visible" && user) {
+                refreshUser();
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, [user, refreshUser]);
 
     const login = useCallback((userData: AuthUser) => {
         setUser(userData);
