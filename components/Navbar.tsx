@@ -95,18 +95,16 @@ export default function Navbar() {
                                     <Link
                                         key={link.name}
                                         href={link.href}
-                                        className={`text-[15px] font-semibold transition-all relative py-1 group ${
-                                            isActive
+                                        className={`text-[15px] font-semibold transition-all relative py-1 group ${isActive
                                                 ? "text-[#0F52BA]"
                                                 : "text-neutral-700 hover:text-[#0F52BA]"
-                                        }`}
+                                            }`}
                                     >
                                         <span>{link.name}</span>
                                         {/* Underline Indicator */}
                                         <span
-                                            className={`absolute bottom-0 left-0 h-0.5 bg-[#0F52BA] transition-all duration-300 ${
-                                                isActive ? "w-full" : "w-0 group-hover:w-full"
-                                            }`}
+                                            className={`absolute bottom-0 left-0 h-0.5 bg-[#0F52BA] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
+                                                }`}
                                         />
                                     </Link>
                                 );
@@ -283,9 +281,8 @@ export default function Navbar() {
 
             {/* FULL SCREEN Mobile Menu (Loads & Slides In from Left to Right) */}
             <div
-                className={`fixed inset-0 z-50 bg-[#0c0e12] text-white flex flex-col justify-between transition-transform duration-500 ease-out transform md:hidden ${
-                    mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-                }`}
+                className={`fixed inset-0 z-50 bg-[#0c0e12] text-white flex flex-col justify-between transition-transform duration-500 ease-out transform md:hidden ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+                    }`}
             >
                 {/* Background Glow Accents */}
                 <div className="pointer-events-none absolute -top-32 left-0 w-80 h-80 bg-[#0F52BA]/25 rounded-full blur-3xl" />
@@ -329,9 +326,8 @@ export default function Navbar() {
                                 key={link.name}
                                 href={link.href}
                                 onClick={() => setMobileMenuOpen(false)}
-                                className={`group flex items-center justify-between py-3 border-b border-neutral-800/80 transition-all ${
-                                    isActive ? "text-[#87CEEB]" : "text-neutral-200 hover:text-white"
-                                }`}
+                                className={`group flex items-center justify-between py-3 border-b border-neutral-800/80 transition-all ${isActive ? "text-[#87CEEB]" : "text-neutral-200 hover:text-white"
+                                    }`}
                                 style={{ transitionDelay: `${idx * 50}ms` }}
                             >
                                 <div>
@@ -343,9 +339,8 @@ export default function Navbar() {
                                     </span>
                                 </div>
                                 <svg
-                                    className={`w-6 h-6 transition-transform group-hover:translate-x-1 ${
-                                        isActive ? "text-[#87CEEB]" : "text-neutral-500"
-                                    }`}
+                                    className={`w-6 h-6 transition-transform group-hover:translate-x-1 ${isActive ? "text-[#87CEEB]" : "text-neutral-500"
+                                        }`}
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     strokeWidth="2.2"
@@ -420,10 +415,10 @@ export default function Navbar() {
                         )}
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-neutral-400 pt-2">
+                    {/* <div className="flex items-center justify-between text-xs text-neutral-400 pt-2">
                         <span>Showroom: Colombo 07, Sri Lanka</span>
                         <span>Hotline: +94 11 234 5678</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>
