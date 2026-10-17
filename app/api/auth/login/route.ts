@@ -2,9 +2,12 @@ import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import {
     comparePassword,
-    signSessionToken,
+    signAccessToken,
+    generateRefreshToken,
+    setAuthCookies,
+    REFRESH_TOKEN_MAX_AGE,
+    RefreshTokenDocument,
     isAdminEmail,
-    AUTH_COOKIE_NAME,
     User,
 } from "@/lib/auth";
 
@@ -26,7 +29,7 @@ export async function POST(request: Request) {
         const usersCollection = db.collection<User>("users");
 
         const user = await usersCollection.findOne({ email: normalizedEmail });
-        if (!user) {
+        if (!user || !user._id) {
             return NextResponse.json(
                 { error: "Invalid email or password." },
                 { status: 401 }
@@ -62,14 +65,26 @@ export async function POST(request: Request) {
         }
 
         const sessionPayload = {
-            id: user._id ? user._id.toString() : "",
+            id: user._id.toString(),
             name: user.name,
             email: user.email,
             role: currentRole,
             avatar: user.avatar,
         };
 
-        const token = await signSessionToken(sessionPayload);
+        // 1. Issue 15-minute access token
+        const accessToken = await signAccessToken(sessionPayload);
+
+        // 2. Generate opaque refresh token and store hash in DB
+        const refresh = generateRefreshToken();
+        const refreshTokensCollection = db.collection<RefreshTokenDocument>("refresh_tokens");
+        await refreshTokensCollection.insertOne({
+            userId: user._id.toString(),
+            tokenHash: refresh.hash,
+            expiresAt: new Date(Date.now() + REFRESH_TOKEN_MAX_AGE * 1000),
+            createdAt: new Date(),
+            revokedAt: null,
+        });
 
         const response = NextResponse.json(
             {
@@ -80,13 +95,8 @@ export async function POST(request: Request) {
             { status: 200 }
         );
 
-        response.cookies.set(AUTH_COOKIE_NAME, token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: 60 * 60 * 24 * 7, // 7 days
-        });
+        // 3. Set both HTTP-only cookies
+        setAuthCookies(response, accessToken, refresh.token);
 
         return response;
     } catch (error: any) {

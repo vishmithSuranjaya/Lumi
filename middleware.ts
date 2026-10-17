@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
+const ACCESS_TOKEN_COOKIE = "access_token";
 const AUTH_COOKIE_NAME = "lumi_auth_token";
 const JWT_SECRET_STRING =
     process.env.JWT_SECRET || "lumi_default_super_secret_jwt_key_at_least_32_chars";
@@ -9,7 +10,9 @@ const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_STRING);
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+    const token =
+        request.cookies.get(ACCESS_TOKEN_COOKIE)?.value ||
+        request.cookies.get(AUTH_COOKIE_NAME)?.value;
 
     let session: { id?: string; role?: string; email?: string } | null = null;
 

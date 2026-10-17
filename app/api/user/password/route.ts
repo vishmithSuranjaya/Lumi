@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
-import { getSessionUser, comparePassword, hashPassword } from "@/lib/auth";
+import {
+    getSessionUser,
+    comparePassword,
+    hashPassword,
+    signAccessToken,
+    generateRefreshToken,
+    setAuthCookies,
+    REFRESH_TOKEN_MAX_AGE,
+    RefreshTokenDocument,
+} from "@/lib/auth";
 import clientPromise from "@/lib/mongodb";
 
 export async function PUT(request: Request) {
@@ -91,10 +100,29 @@ export async function PUT(request: Request) {
             },
         });
 
-        return NextResponse.json({
+        // Revoke all existing refresh tokens for this user across all devices
+        const targetUserId = user._id.toString();
+        const refreshTokensCollection = db.collection<RefreshTokenDocument>("refresh_tokens");
+        await refreshTokensCollection.deleteMany({ userId: targetUserId });
+
+        // Issue fresh access & refresh tokens for the current device
+        const newAccessToken = await signAccessToken(session);
+        const refresh = generateRefreshToken();
+        await refreshTokensCollection.insertOne({
+            userId: targetUserId,
+            tokenHash: refresh.hash,
+            expiresAt: new Date(Date.now() + REFRESH_TOKEN_MAX_AGE * 1000),
+            createdAt: new Date(),
+            revokedAt: null,
+        });
+
+        const response = NextResponse.json({
             success: true,
             message: "Password changed successfully.",
         });
+
+        setAuthCookies(response, newAccessToken, refresh.token);
+        return response;
     } catch (error: any) {
         console.error("Error changing password:", error);
         return NextResponse.json(

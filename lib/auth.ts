@@ -2,8 +2,15 @@ import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { ObjectId } from "mongodb";
+import { randomBytes, createHash } from "crypto";
+import { NextResponse } from "next/server";
 
-export const AUTH_COOKIE_NAME = "lumi_auth_token";
+export const ACCESS_TOKEN_COOKIE = "access_token";
+export const REFRESH_TOKEN_COOKIE = "refresh_token";
+export const AUTH_COOKIE_NAME = ACCESS_TOKEN_COOKIE;
+
+export const ACCESS_TOKEN_MAX_AGE = 60 * 15; // 15 minutes (in seconds)
+export const REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 7; // 7 days (in seconds)
 
 const JWT_SECRET_STRING =
     process.env.JWT_SECRET || "lumi_default_super_secret_jwt_key_at_least_32_chars";
@@ -28,6 +35,15 @@ export interface UserSessionPayload {
     email: string;
     role: "user" | "admin";
     avatar?: string;
+}
+
+export interface RefreshTokenDocument {
+    _id?: ObjectId;
+    userId: string;
+    tokenHash: string;
+    expiresAt: Date;
+    createdAt: Date;
+    revokedAt?: Date | null;
 }
 
 /**
@@ -65,14 +81,85 @@ export async function comparePassword(password: string, hash: string): Promise<b
 }
 
 /**
- * Sign a JWT session token with jose
+ * Sign a short-lived JWT access token with jose (valid 15 minutes)
  */
-export async function signSessionToken(payload: UserSessionPayload): Promise<string> {
+export async function signAccessToken(payload: UserSessionPayload): Promise<string> {
     return new SignJWT({ ...payload })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
-        .setExpirationTime("7d")
+        .setExpirationTime("15m")
         .sign(JWT_SECRET);
+}
+
+// Backward compatible alias
+export const signSessionToken = signAccessToken;
+
+/**
+ * Generate a random opaque refresh token and its SHA-256 hash
+ */
+export function generateRefreshToken() {
+    const token = randomBytes(48).toString("hex");
+    const hash = createHash("sha256").update(token).digest("hex");
+    return { token, hash }; // send token in cookie, store hash in DB
+}
+
+/**
+ * Hash a plain refresh token string using SHA-256
+ */
+export function hashRefreshToken(token: string): string {
+    return createHash("sha256").update(token).digest("hex");
+}
+
+/**
+ * Set both Access (15m) and Refresh (7d) HTTP-only cookies on a NextResponse
+ */
+export function setAuthCookies(
+    response: NextResponse,
+    accessToken: string,
+    refreshToken: string
+) {
+    response.cookies.set(ACCESS_TOKEN_COOKIE, accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: ACCESS_TOKEN_MAX_AGE,
+    });
+
+    response.cookies.set(REFRESH_TOKEN_COOKIE, refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/api/auth", // only sent to auth endpoints
+        maxAge: REFRESH_TOKEN_MAX_AGE,
+    });
+}
+
+/**
+ * Clear both Access and Refresh cookies on a NextResponse
+ */
+export function clearAuthCookies(response: NextResponse) {
+    response.cookies.set(ACCESS_TOKEN_COOKIE, "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 0,
+    });
+    response.cookies.set("lumi_auth_token", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 0,
+    });
+    response.cookies.set(REFRESH_TOKEN_COOKIE, "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/api/auth",
+        maxAge: 0,
+    });
 }
 
 /**
@@ -99,7 +186,9 @@ export async function verifySessionToken(token: string): Promise<UserSessionPayl
 export async function getSessionUser(): Promise<UserSessionPayload | null> {
     try {
         const cookieStore = await cookies();
-        const token = cookieStore.get(AUTH_COOKIE_NAME)?.value;
+        const token =
+            cookieStore.get(ACCESS_TOKEN_COOKIE)?.value ||
+            cookieStore.get("lumi_auth_token")?.value;
         if (!token) return null;
         return await verifySessionToken(token);
     } catch {
