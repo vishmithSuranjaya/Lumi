@@ -955,7 +955,7 @@ function ProfilePageContent() {
                                                     <div className="p-4 bg-neutral-50 border-t border-neutral-100 flex items-center justify-between gap-3">
                                                         {isApproved ? (
                                                             <Link
-                                                                href="/vehicles"
+                                                                href={`/vehicles/${ad._id}`}
                                                                 className="text-xs font-bold text-[#0F52BA] hover:underline uppercase tracking-wider flex items-center gap-1"
                                                             >
                                                                 <span>View In Catalog</span>
