@@ -565,7 +565,7 @@ export default function VehicleCatalog({
                                 key={vehicle._id}
                                 className="group bg-white border border-neutral-200/90 shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
                             >
-                                <div>
+                                <Link href={`/vehicles/${vehicle._id}`} className="block group/link cursor-pointer">
                                     {/* Image Container with Badges */}
                                     <div className="relative h-56 sm:h-60 w-full overflow-hidden bg-neutral-100">
                                         <div
@@ -660,9 +660,12 @@ export default function VehicleCatalog({
                                             <span className="text-neutral-500 font-medium truncate">
                                                 Seller: <strong className="text-neutral-800">{vehicle.sellerName}</strong>
                                             </span>
+                                            <span className="text-[#0F52BA] font-bold text-[11px] group-hover/link:translate-x-0.5 transition-transform">
+                                                Details →
+                                            </span>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
 
                                 {/* Action Buttons */}
                                 <div className="p-5 pt-0 grid grid-cols-2 gap-2.5">
