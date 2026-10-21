@@ -123,7 +123,6 @@ export function setAuthCookies(
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         path: "/",
-        maxAge: ACCESS_TOKEN_MAX_AGE,
     });
 
     response.cookies.set(REFRESH_TOKEN_COOKIE, refreshToken, {
@@ -131,7 +130,6 @@ export function setAuthCookies(
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         path: "/api/auth", // only sent to auth endpoints
-        maxAge: REFRESH_TOKEN_MAX_AGE,
     });
 }
 
@@ -140,13 +138,6 @@ export function setAuthCookies(
  */
 export function clearAuthCookies(response: NextResponse) {
     response.cookies.set(ACCESS_TOKEN_COOKIE, "", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 0,
-    });
-    response.cookies.set("lumi_auth_token", "", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -186,9 +177,7 @@ export async function verifySessionToken(token: string): Promise<UserSessionPayl
 export async function getSessionUser(): Promise<UserSessionPayload | null> {
     try {
         const cookieStore = await cookies();
-        const token =
-            cookieStore.get(ACCESS_TOKEN_COOKIE)?.value ||
-            cookieStore.get("lumi_auth_token")?.value;
+        const token = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
         if (!token) return null;
         return await verifySessionToken(token);
     } catch {
